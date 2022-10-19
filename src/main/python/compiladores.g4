@@ -47,7 +47,13 @@ instruccion:
 bloque: LLA instrucciones LLC;
 
 bloquefor:
-	FOR PA (declaracion | asignacion) PYC cmp PYC asignacion PC bloque;
+	FOR PA (declaracion | asignacion) PYC cmp PYC asignacion PC bloque
+	| FOR PA PYC PYC PYC PC
+	| FOR PA (declaracion | asignacion) PYC PYC asignacion PC bloque
+	| FOR PA (declaracion | asignacion) PYC cmp PYC PC bloque
+	| FOR PA (declaracion | asignacion) PYC PYC PC bloque
+	| FOR PA PYC cmp PYC asignacion PC bloque
+	| FOR PA PYC PYC asignacion PC bloque;
 
 bloquewhile: WHILE control bloque;
 
