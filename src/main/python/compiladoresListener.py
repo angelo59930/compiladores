@@ -44,12 +44,12 @@ class compiladoresListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by compiladoresParser#asignacion.
-    def enterAsignacion(self, ctx:compiladoresParser.AsignacionContext):
+    # Enter a parse tree produced by compiladoresParser#bloqueif.
+    def enterBloqueif(self, ctx:compiladoresParser.BloqueifContext):
         pass
 
-    # Exit a parse tree produced by compiladoresParser#asignacion.
-    def exitAsignacion(self, ctx:compiladoresParser.AsignacionContext):
+    # Exit a parse tree produced by compiladoresParser#bloqueif.
+    def exitBloqueif(self, ctx:compiladoresParser.BloqueifContext):
         pass
 
 
@@ -59,6 +59,15 @@ class compiladoresListener(ParseTreeListener):
 
     # Exit a parse tree produced by compiladoresParser#declaracion.
     def exitDeclaracion(self, ctx:compiladoresParser.DeclaracionContext):
+        pass
+
+
+    # Enter a parse tree produced by compiladoresParser#asignacion.
+    def enterAsignacion(self, ctx:compiladoresParser.AsignacionContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#asignacion.
+    def exitAsignacion(self, ctx:compiladoresParser.AsignacionContext):
         pass
 
 
@@ -131,6 +140,24 @@ class compiladoresListener(ParseTreeListener):
 
     # Exit a parse tree produced by compiladoresParser#f.
     def exitF(self, ctx:compiladoresParser.FContext):
+        pass
+
+
+    # Enter a parse tree produced by compiladoresParser#control.
+    def enterControl(self, ctx:compiladoresParser.ControlContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#control.
+    def exitControl(self, ctx:compiladoresParser.ControlContext):
+        pass
+
+
+    # Enter a parse tree produced by compiladoresParser#cmp.
+    def enterCmp(self, ctx:compiladoresParser.CmpContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#cmp.
+    def exitCmp(self, ctx:compiladoresParser.CmpContext):
         pass
 
 

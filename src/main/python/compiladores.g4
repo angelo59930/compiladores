@@ -8,12 +8,21 @@ PC: ')';
 LLA: '{';
 LLC: '}';
 PYC: ';';
+COMA: ',';
 ASSIG: '=';
 SUMA: '+';
 MULT: '*';
 REST: '-';
+DIV: '/';
+
+MENOR: '<';
+MAYOR: '>';
+IGUALDAD: '==';
+DISTINTO: '!=';
 
 INT: 'int';
+
+IF: 'if';
 
 NUMERO: DIGITO+;
 
@@ -25,18 +34,24 @@ programa: instrucciones EOF;
 
 instrucciones: instruccion instrucciones |;
 
-instruccion: bloque | declaracion PYC | asignacion PYC;
-// | bloqueif | bloquefor | bloquewhile;
+instruccion:
+	bloque
+	| declaracion PYC
+	| asignacion PYC
+	| bloqueif;
+//| bloquefor | bloquewhile;
 
 bloque: LLA instrucciones LLC;
 
-asignacion: ID ASSIG NUMERO
-					| ID ASSIG itop;
+bloqueif: IF control bloque;
 
 declaracion:
 	tdato ID
 	| tdato asignacion
-	|; // | tdato ID ASSIG ... ?
+	| declaracion COMA asignacion
+	|;
+
+asignacion: ID ASSIG NUMERO | ID ASSIG itop;
 
 tdato: INT;
 
@@ -52,4 +67,20 @@ t: SUMA term t | REST term t |;
 
 factor: ID | NUMERO | PA exp PC;
 
-f: MULT factor f |;
+f: MULT factor f | DIV factor f |;
+
+control: PA cmp PC;
+
+cmp:
+	ID MAYOR NUMERO
+	| ID MENOR NUMERO
+	| ID IGUALDAD NUMERO
+	| ID DISTINTO NUMERO
+	| ID MAYOR ID
+	| ID MENOR ID
+	| ID IGUALDAD ID
+	| ID DISTINTO ID
+	| NUMERO MAYOR ID
+	| NUMERO MENOR ID
+	| NUMERO IGUALDAD ID
+	| NUMERO DISTINTO ID;
