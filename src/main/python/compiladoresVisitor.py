@@ -9,8 +9,8 @@ else:
 
 class compiladoresVisitor(ParseTreeVisitor):
 
-    # Visit a parse tree produced by compiladoresParser#prog.
-    def visitProg(self, ctx:compiladoresParser.ProgContext):
+    # Visit a parse tree produced by compiladoresParser#programa.
+    def visitPrograma(self, ctx:compiladoresParser.ProgramaContext):
         return self.visitChildren(ctx)
 
 
@@ -24,23 +24,13 @@ class compiladoresVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by compiladoresParser#prototipado.
-    def visitPrototipado(self, ctx:compiladoresParser.PrototipadoContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by compiladoresParser#funcion.
-    def visitFuncion(self, ctx:compiladoresParser.FuncionContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by compiladoresParser#parametro.
-    def visitParametro(self, ctx:compiladoresParser.ParametroContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by compiladoresParser#bloque.
     def visitBloque(self, ctx:compiladoresParser.BloqueContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by compiladoresParser#asignacion.
+    def visitAsignacion(self, ctx:compiladoresParser.AsignacionContext):
         return self.visitChildren(ctx)
 
 
@@ -54,43 +44,38 @@ class compiladoresVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by compiladoresParser#asignacion.
-    def visitAsignacion(self, ctx:compiladoresParser.AsignacionContext):
+    # Visit a parse tree produced by compiladoresParser#itop.
+    def visitItop(self, ctx:compiladoresParser.ItopContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by compiladoresParser#valor.
-    def visitValor(self, ctx:compiladoresParser.ValorContext):
+    # Visit a parse tree produced by compiladoresParser#oparit.
+    def visitOparit(self, ctx:compiladoresParser.OparitContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by compiladoresParser#bloqif.
-    def visitBloqif(self, ctx:compiladoresParser.BloqifContext):
+    # Visit a parse tree produced by compiladoresParser#exp.
+    def visitExp(self, ctx:compiladoresParser.ExpContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by compiladoresParser#bloqwhile.
-    def visitBloqwhile(self, ctx:compiladoresParser.BloqwhileContext):
+    # Visit a parse tree produced by compiladoresParser#term.
+    def visitTerm(self, ctx:compiladoresParser.TermContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by compiladoresParser#bloqfor.
-    def visitBloqfor(self, ctx:compiladoresParser.BloqforContext):
+    # Visit a parse tree produced by compiladoresParser#t.
+    def visitT(self, ctx:compiladoresParser.TContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by compiladoresParser#modificacion.
-    def visitModificacion(self, ctx:compiladoresParser.ModificacionContext):
+    # Visit a parse tree produced by compiladoresParser#factor.
+    def visitFactor(self, ctx:compiladoresParser.FactorContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by compiladoresParser#comprobacion.
-    def visitComprobacion(self, ctx:compiladoresParser.ComprobacionContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by compiladoresParser#control.
-    def visitControl(self, ctx:compiladoresParser.ControlContext):
+    # Visit a parse tree produced by compiladoresParser#f.
+    def visitF(self, ctx:compiladoresParser.FContext):
         return self.visitChildren(ctx)
 
 

@@ -2,103 +2,54 @@ grammar compiladores;
 
 fragment LETRA: [A-Za-z];
 fragment DIGITO: [0-9];
-// PUNTO Y COMA
+
+PA: '(';
+PC: ')';
+LLA: '{';
+LLC: '}';
 PYC: ';';
+ASSIG: '=';
+SUMA: '+';
+MULT: '*';
+REST: '-';
 
-COMA: ',';
-PUNTO: '.';
-ESPACIO: ' ';
-// CONTROL DE BLOQUE
-LA: '{';
-LC: '}';
-CA: '[';
-CC: ']';
-PA: ')';
-PC: '(';
-// OPERADORES ARITMETICOS
-MAS: '+';
-MENOS: '-';
-PRODUCTO: '*';
-DIVISION: '/';
-// ASIGNACION
-IGUAL: '=';
-// COMPARACION
-MENOR: '<';
-MAYOR: '>';
-IGUALDAD: '==';
-DISTINTO: '!=';
-IF: 'if';
-FOR: 'for';
-WHILE: 'while';
-// TIPO DE DATO
 INT: 'int';
-FLOAT: 'float';
 
-FLOTANTE: DIGITO PUNTO DIGITO | '-' DIGITO PUNTO DIGITO;
-ENTERO: DIGITO+ | '-' DIGITO+;
-PALABRA: LETRA+;
+NUMERO: DIGITO+;
+
+ID: (LETRA | '_') (LETRA | DIGITO | '_')*;
 
 WS: [ \t\n\r] -> skip;
-OTRO: .;
 
-ID: (LETRA | '_') (LETRA | DIGITO | '_')+;
-
-prog: (prototipado PYC instrucciones | instruccion) EOF;
+programa: instrucciones EOF;
 
 instrucciones: instruccion instrucciones |;
 
-instruccion:
-	bloque
-	| funcion // PREGUNTAR QUE HACER CON ESTO
-	| declaracion PYC
-	| asignacion PYC
-	| bloqif
-	| bloqfor
-	| bloqwhile;
+instruccion: bloque | declaracion PYC | asignacion PYC;
+// | bloqueif | bloquefor | bloquewhile;
 
-prototipado: tdato ID parametro PC;
+bloque: LLA instrucciones LLC;
 
-funcion: prototipado bloque;
-
-parametro: tdato ID | tdato ID PYC parametro;
-
-bloque: LA instrucciones LC;
+asignacion: ID ASSIG NUMERO
+					| ID ASSIG itop;
 
 declaracion:
 	tdato ID
 	| tdato asignacion
-	| tdato asignacion COMA declaracion
-	| tdato ID COMA declaracion;
+	|; // | tdato ID ASSIG ... ?
 
-tdato: INT | FLOAT;
+tdato: INT;
 
-asignacion: ID IGUAL valor;
+itop: oparit itop |;
+// c = a + b + d + f / r * q
+oparit: exp;
 
-valor: ENTERO | FLOTANTE;
+exp: term t;
 
-bloqif: IF comprobacion bloque;
+term: factor f;
 
-bloqwhile: WHILE comprobacion bloque;
+t: SUMA term t | REST term t |;
 
-bloqfor:
-	FOR PA declaracion PYC control PYC modificacion PC bloque
-	| FOR PA PYC control PYC modificacion PC bloque
-	| FOR PA PYC PYC modificacion PC bloque
-	| FOR PA PYC PYC PC bloque
-	| FOR PA declaracion PYC PYC modificacion PC bloque
-	| FOR PA declaracion PYC PYC PC bloque;
+factor: ID | NUMERO | PA exp PC;
 
-modificacion: ID IGUAL ID MAS valor | ID IGUAL ID MAS ID;
-
-comprobacion: PA control PC;
-
-control:
-	ID MAYOR valor
-	| ID MENOR valor
-	| ID IGUAL valor
-	| ID DISTINTO valor
-	| ID MAYOR ID
-	| ID MENOR ID
-	| ID IGUAL ID
-	| ID DISTINTO ID;
-
+f: MULT factor f |;
