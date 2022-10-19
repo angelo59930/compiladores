@@ -23,6 +23,8 @@ DISTINTO: '!=';
 INT: 'int';
 
 IF: 'if';
+WHILE: 'while';
+FOR: 'for';
 
 NUMERO: DIGITO+;
 
@@ -38,10 +40,16 @@ instruccion:
 	bloque
 	| declaracion PYC
 	| asignacion PYC
-	| bloqueif;
-//| bloquefor | bloquewhile;
+	| bloqueif
+	| bloquewhile
+	| bloquefor;
 
 bloque: LLA instrucciones LLC;
+
+bloquefor:
+	FOR PA (declaracion | asignacion) PYC cmp PYC asignacion PC bloque;
+
+bloquewhile: WHILE control bloque;
 
 bloqueif: IF control bloque;
 
