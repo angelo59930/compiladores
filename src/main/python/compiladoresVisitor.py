@@ -29,6 +29,36 @@ class compiladoresVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by compiladoresParser#retorno.
+    def visitRetorno(self, ctx:compiladoresParser.RetornoContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by compiladoresParser#prototipado.
+    def visitPrototipado(self, ctx:compiladoresParser.PrototipadoContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by compiladoresParser#argumentos.
+    def visitArgumentos(self, ctx:compiladoresParser.ArgumentosContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by compiladoresParser#argumento.
+    def visitArgumento(self, ctx:compiladoresParser.ArgumentoContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by compiladoresParser#funcion.
+    def visitFuncion(self, ctx:compiladoresParser.FuncionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by compiladoresParser#llamadaFuncion.
+    def visitLlamadaFuncion(self, ctx:compiladoresParser.LlamadaFuncionContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by compiladoresParser#bloquefor.
     def visitBloquefor(self, ctx:compiladoresParser.BloqueforContext):
         return self.visitChildren(ctx)

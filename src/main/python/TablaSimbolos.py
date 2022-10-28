@@ -1,38 +1,65 @@
-class tablaValores:
-    '''
-    name = 'ejemplo'
-    id = [id.__init__('a', 'b', 0, 1)] 
+class TablaSimbolos:
     
-    ts = [dict(id.name, id)]
-    '''
+    _instance = None
+    
+    def __new__(cls):
+        if cls._instance is None:
+           cls._instance = super(TablaSimbolos, cls).__new__(cls)
+        return cls._instance
+    
     ts = [dict()]
-    def add_id(self, id):
-        self.ts[-1][id.name] : id
-
-    def add_context(self):
+    
+    def addContex(self):
         self.ts.append(dict())
+    
+    def removeContex(self):
+        self.ts.pop()
+        
+    
+    
 
-    def del_context(self):
-        self.ts.pop();
-
-    def findKey(self, key):
-        for context in self.ts:
-            if(key in context):
-                return True
-
-        return False
-
-class id:
-    def __init__(self, name, type):
-        self.name = name
-        self.type = type
+class Id:
+    
+    def __init__(self):
+        self.name = ""
+        self.tipo = ""
         self.initialized = False
         self.used = False
+    
+    def setName(self, name):
+        self.name = name
+    def getName(self):
+        return self.name
+    
+    def setTipo(self, tipo):
+        self.tipo = tipo
+    def getTipo(self):
+        return self.tipo
+    
+    
+    def setInit(self, init):
+        self.initialized = init
+    def getInit(self):
+        return self.initialized
+    
+    def setUsed(self, used):
+        self.used = used
+    def getUsed(self):
+        return self.used
 
-class variable(id):
+    def cloneType(self):
+        id = Id()
+        id.setTipo(self.getTipo())
+        
+        return id
+        
+        
+
+
+class Variable(Id):
     pass
 
-class funcion(id):
+class Funcion(Id):
     def __init__(self, name, type, parameters):
         super().__init__(name, type)
         self.parameters = parameters

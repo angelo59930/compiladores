@@ -28,6 +28,8 @@ FOR: 'for';
 
 NUMERO: DIGITO+;
 
+RETORNO: 'return';
+
 ID: (LETRA | '_') (LETRA | DIGITO | '_')*;
 
 WS: [ \t\n\r] -> skip;
@@ -42,9 +44,27 @@ instruccion:
 	| asignacion PYC
 	| bloqueif
 	| bloquewhile
-	| bloquefor;
+	| bloquefor
+	| prototipado PYC
+	| funcion
+	| llamadaFuncion PYC
+	;
 
-bloque: LLA instrucciones LLC;
+bloque: LLA instrucciones LLC | LLA instrucciones retorno PYC LLC;
+
+retorno: RETORNO | RETORNO ID | RETORNO NUMERO;
+
+prototipado: tdato ID PA (argumentos |) PC;
+
+argumentos: argumento | argumento COMA argumentos |;
+
+argumento: tdato ID ;
+
+funcion: prototipado bloque;
+
+llamadaFuncion:
+	ID PA (argumentos |) PC 
+	| ID PA PC;
 
 bloquefor:
 	FOR PA (declaracion | asignacion) PYC cmp PYC asignacion PC bloque
@@ -65,7 +85,7 @@ declaracion:
 	| declaracion COMA asignacion
 	|;
 
-asignacion: ID ASSIG NUMERO | ID ASSIG itop;
+asignacion: ID ASSIG NUMERO | ID ASSIG itop | ID ASSIG llamadaFuncion;
 
 tdato: INT;
 

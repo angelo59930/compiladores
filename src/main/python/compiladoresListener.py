@@ -44,6 +44,60 @@ class compiladoresListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by compiladoresParser#retorno.
+    def enterRetorno(self, ctx:compiladoresParser.RetornoContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#retorno.
+    def exitRetorno(self, ctx:compiladoresParser.RetornoContext):
+        pass
+
+
+    # Enter a parse tree produced by compiladoresParser#prototipado.
+    def enterPrototipado(self, ctx:compiladoresParser.PrototipadoContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#prototipado.
+    def exitPrototipado(self, ctx:compiladoresParser.PrototipadoContext):
+        pass
+
+
+    # Enter a parse tree produced by compiladoresParser#argumentos.
+    def enterArgumentos(self, ctx:compiladoresParser.ArgumentosContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#argumentos.
+    def exitArgumentos(self, ctx:compiladoresParser.ArgumentosContext):
+        pass
+
+
+    # Enter a parse tree produced by compiladoresParser#argumento.
+    def enterArgumento(self, ctx:compiladoresParser.ArgumentoContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#argumento.
+    def exitArgumento(self, ctx:compiladoresParser.ArgumentoContext):
+        pass
+
+
+    # Enter a parse tree produced by compiladoresParser#funcion.
+    def enterFuncion(self, ctx:compiladoresParser.FuncionContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#funcion.
+    def exitFuncion(self, ctx:compiladoresParser.FuncionContext):
+        pass
+
+
+    # Enter a parse tree produced by compiladoresParser#llamadaFuncion.
+    def enterLlamadaFuncion(self, ctx:compiladoresParser.LlamadaFuncionContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#llamadaFuncion.
+    def exitLlamadaFuncion(self, ctx:compiladoresParser.LlamadaFuncionContext):
+        pass
+
+
     # Enter a parse tree produced by compiladoresParser#bloquefor.
     def enterBloquefor(self, ctx:compiladoresParser.BloqueforContext):
         pass
