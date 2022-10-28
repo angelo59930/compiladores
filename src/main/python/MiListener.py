@@ -72,7 +72,7 @@ class MiListener(ParseTreeListener):
         func = Funcion()
         datos = ctx.getText()
         func.setInit(True)
-        func = self.save(func,datos)
+        func = self.saveFunc(func,datos)
         #TODO:ver la existencia de las variables?
 
 
@@ -167,7 +167,7 @@ class MiListener(ParseTreeListener):
             dato = datos.split("=")
             varTmp = Variable().cloneType()
             varTmp.setName(dato[0])
-            varTmp.getInit(True) 
+            varTmp.setInit(True) 
 
     # Enter a parse tree produced by compiladoresParser#asignacion.
     def enterAsignacion(self, ctx:compiladoresParser.AsignacionContext):
@@ -284,10 +284,10 @@ class MiListener(ParseTreeListener):
         #TODO:HAcer lo mismo con otros tipos de datos
         if datos.startswith("int"):
             func.setTipo("int")
-            datos = datps[3:]
+            datos = datos[3:]
 
         datos = datos.split("(")
-        func.setNombre(datos[0])
+        func.setName(datos[0])
 
         datos = datos[1].split(")")[0]
 
