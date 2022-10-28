@@ -50,7 +50,7 @@ class Id:
     def cloneType(self):
         id = Id()
         id.setTipo(self.getTipo())
-        
+        id.setUsed(self.getUsed())
         return id
         
         
@@ -60,6 +60,13 @@ class Variable(Id):
     pass
 
 class Funcion(Id):
-    def __init__(self, name, type, parameters):
-        super().__init__(name, type)
-        self.parameters = parameters
+    arguments = []
+    
+    def addArguments(self,name,tipo):
+        self.arguments.append(dict())
+        
+        self.arguments[-1].get("type")
+        self.arguments[-1]["type"] = tipo
+        self.arguments[-1].get("name")
+        self.arguments[-1]["name"] = name
+        

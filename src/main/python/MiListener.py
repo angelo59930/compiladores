@@ -12,7 +12,7 @@ from TablaSimbolos import Variable
 # This class defines a complete listener for a parse tree produced by compiladoresParser.
 class MiListener(ParseTreeListener):
     
-
+    # TODO:Crear escritura de archivo
     tabalSimbolos = ts()
 
     # Enter a parse tree produced by compiladoresParser#programa.
@@ -69,7 +69,11 @@ class MiListener(ParseTreeListener):
 
     # Exit a parse tree produced by compiladoresParser#prototipado.
     def exitPrototipado(self, ctx:compiladoresParser.PrototipadoContext):
-        pass
+        func = Funcion()
+        datos = ctx.getText()
+        func.setInit(True)
+        func = self.save(func,datos)
+        #TODO:ver la existencia de las variables?
 
 
     # Enter a parse tree produced by compiladoresParser#argumentos.
@@ -146,6 +150,7 @@ class MiListener(ParseTreeListener):
         tmp = ctx.getText()
         datos = ""
         
+        #TODO:de la misma forma agregar mas tipos de datos(float, double)
         if tmp.startswith('int'):
             var.setTipo("int")
             datos = tmp[3:]
@@ -166,8 +171,19 @@ class MiListener(ParseTreeListener):
 
     # Enter a parse tree produced by compiladoresParser#asignacion.
     def enterAsignacion(self, ctx:compiladoresParser.AsignacionContext):
-        pass
-
+        var = Variable()
+        var.setUsed(True)
+        datos = ctx.getText()
+        d = datos.split("=")
+        v = var.cloneType()
+        v.setName(d[0])
+        
+        #TODO:Continuar
+        if(len(d) > 1):
+            pass
+        
+        
+   
     # Exit a parse tree produced by compiladoresParser#asignacion.
     def exitAsignacion(self, ctx:compiladoresParser.AsignacionContext):
         pass
@@ -263,5 +279,33 @@ class MiListener(ParseTreeListener):
         pass
 
 
+    def saveFunc(self,func,datos):
+
+        #TODO:HAcer lo mismo con otros tipos de datos
+        if datos.startswith("int"):
+            func.setTipo("int")
+            datos = datps[3:]
+
+        datos = datos.split("(")
+        func.setNombre(datos[0])
+
+        datos = datos[1].split(")")[0]
+
+        if "," in datos:
+            dato = datos.split(",")
+            tipo = ""
+
+            for i in dato:
+                #TODO:Hacer lo mismo con el resto de tipos de datos
+                if "int" in i:
+                    tipo = "int"
+                    nombre = i[3:]
+                else:
+                    nombre = i
+                func.addArguments(nombre,tipo)
+
+        return func
+
+    #TODO:VER SI LAS VARIABLES YA ESTAN SUADAS
 
 del compiladoresParser
