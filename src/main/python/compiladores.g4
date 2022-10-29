@@ -86,6 +86,8 @@ declaracion:
 	| tdato ID COMA declaracion
 	| ID
 	| asignacion
+	| ID COMA declaracion
+	| asignacion COMA declaracion
 	|;
 
 asignacion: ID ASSIG NUMERO | ID ASSIG itop | ID ASSIG llamadaFuncion;

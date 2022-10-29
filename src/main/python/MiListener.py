@@ -12,6 +12,8 @@ from TablaSimbolos import Variable
 # This class defines a complete listener for a parse tree produced by compiladoresParser.
 class MiListener(ParseTreeListener):
     
+    #FIXME:VERIFICAR SI ESTA MAL EL COMPILADORES.G4 POR EL TEMA DE PROTOTIPADO Y DESARROLLO DE FUNCION
+    
     tabalSimbolos = ts()
     out = open("output/ts.txt", "w")
     
@@ -81,7 +83,7 @@ class MiListener(ParseTreeListener):
         datos = ctx.getText()
         func.setInit(True)
         func = self.saveFunc(func,datos)
-        #TODO:ver la existencia de las variables?
+        self.isUsed(func.getName(), func.toDictionay(), 0)
 
 
     # Enter a parse tree produced by compiladoresParser#argumentos.
@@ -158,7 +160,6 @@ class MiListener(ParseTreeListener):
         tmp = ctx.getText()
         datos = ""
         
-        #TODO:de la misma forma agregar mas tipos de datos(float, double)
         if tmp.startswith('int'):
             var.setTipo("int")
             datos = tmp[3:]
@@ -187,12 +188,19 @@ class MiListener(ParseTreeListener):
                    
         else:
             dato = datos.split("=")
-            varTmp = Variable().cloneType()
+            varTmp = var.cloneType()
             varTmp.setName(dato[0])
             varTmp.setInit(True) 
 
     # Enter a parse tree produced by compiladoresParser#asignacion.
     def enterAsignacion(self, ctx:compiladoresParser.AsignacionContext):
+        pass
+            
+        
+        
+   
+    # Exit a parse tree produced by compiladoresParser#asignacion.
+    def exitAsignacion(self, ctx:compiladoresParser.AsignacionContext):
         var = Variable()
         var.setUsed(True)
         datos = ctx.getText()
@@ -200,15 +208,28 @@ class MiListener(ParseTreeListener):
         v = var.cloneType()
         v.setName(d[0])
         
-        #TODO:Continuar
+
         if(len(d) > 1):
-            pass
-        
-        
-   
-    # Exit a parse tree produced by compiladoresParser#asignacion.
-    def exitAsignacion(self, ctx:compiladoresParser.AsignacionContext):
-        pass
+            self.isUsed(d[0], var.toDictionay(), 1)
+            valor = d[1]
+            
+            posiblesVariables = []
+
+         
+            aux1 = valor.split('+')
+            for i in aux1:
+                aux2 = i.split('-')
+                for j in aux2:
+                    aux3 = j.split('*')
+                    for k in aux3:
+                        aux4 = k.split('/')
+                        for m in aux4:
+                            if not m.isnumeric() and m != "":
+                                posiblesVariables.append(m)
+            
+            for i  in posiblesVariables:
+                self.existeVariable(i,"algo",1)
+            
 
 
     # Enter a parse tree produced by compiladoresParser#tdato.
@@ -303,7 +324,6 @@ class MiListener(ParseTreeListener):
 
     def saveFunc(self,func,datos):
 
-        #TODO:HAcer lo mismo con otros tipos de datos
         if datos.startswith("int"):
             func.setTipo("int")
             datos = datos[3:]
@@ -318,7 +338,6 @@ class MiListener(ParseTreeListener):
             tipo = ""
 
             for i in dato:
-                #TODO:Hacer lo mismo con el resto de tipos de datos
                 if "int" in i:
                     tipo = "int"
                     nombre = i[3:]
@@ -335,14 +354,15 @@ class MiListener(ParseTreeListener):
     '''
     def isUsed(self, id, var, case):
         i, used = self.tabalSimbolos.searchId(id)
-        print("SOY LA FUNCION")
         print(str(var))
         
+        #FIXME:VERIFIAR PORQUE SE VA A ERROR
         # no la encontramos en la tabla de simbolos
         if used == False:
             # caso funcion
-            if case == 1 and "(" in id:
-                self.isUsed(id.split("(")[0], var, 1)
+            if case == 1: 
+                if "(" in id:
+                    self.isUsed(id.split("(")[0], var, 1)
             else:
                 print("ERROR")
             
