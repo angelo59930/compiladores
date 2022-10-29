@@ -162,14 +162,15 @@ class MiListener(ParseTreeListener):
         
         tmp = ctx.getText()
         datos = ""
+    
         
         if tmp.startswith('int'):
             var.setTipo("int")
             datos = tmp[3:]
             #var.setName(tmp[3:])
         
+        
         if "," in datos:
-            
             '''  datos -> a = 2, b, c, d = 4 '''
             dato = datos.split(',')
             
@@ -195,7 +196,8 @@ class MiListener(ParseTreeListener):
             dato = datos.split("=")
             varTmp = var.cloneType()
             varTmp.setName(dato[0])
-            varTmp.setInit(True) 
+            varTmp.setInit(True)
+            self.isUsed(dato[0], varTmp.toDictionay(),0)
 
     # Enter a parse tree produced by compiladoresParser#asignacion.
     def enterAsignacion(self, ctx:compiladoresParser.AsignacionContext):
@@ -212,7 +214,6 @@ class MiListener(ParseTreeListener):
         d = datos.split("=")
         v = var.cloneType()
         v.setName(d[0])
-        
 
         if(len(d) > 1):
             self.isUsed(d[0], var.toDictionay(), 1)
