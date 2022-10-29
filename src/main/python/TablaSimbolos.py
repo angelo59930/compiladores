@@ -15,7 +15,22 @@ class TablaSimbolos:
     def removeContex(self):
         self.ts.pop()
         
+    def addId(self,name,var, i):
+        tmp = -1 if i == " " else -i 
+         
+        self.ts[tmp].get("name_"+str(name))
+        self.ts[tmp]["name_"+str(name)] = name
+        self.ts[tmp].get("var_"+str(var))
+        self.ts[tmp]["var_"+str(var)] = var
     
+    def searchId(self,id):
+        for i in range(0, len(self.ts)):
+            if ("name_"+str(id)) in self.ts[-i]:
+                return i, self.ts[-i],get("var_"+str(id))
+            
+            return i, False
+        
+        
     
 
 class Id:

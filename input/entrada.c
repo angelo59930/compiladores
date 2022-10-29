@@ -1,10 +1,5 @@
-
-int prototipado();
-
-int global = 0;
-
 int main(){
-  int a;
+  int a = 4;
   while(a == 1){
     if(a > 0){
       int b = a;

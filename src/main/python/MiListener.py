@@ -12,7 +12,6 @@ from TablaSimbolos import Variable
 # This class defines a complete listener for a parse tree produced by compiladoresParser.
 class MiListener(ParseTreeListener):
     
-    # TODO:Crear escritura de archivo
     tabalSimbolos = ts()
     out = open("output/ts.txt", "w")
     
@@ -46,10 +45,13 @@ class MiListener(ParseTreeListener):
 
     # Enter a parse tree produced by compiladoresParser#bloque.
     def enterBloque(self, ctx:compiladoresParser.BloqueContext):
+        '''-> { '''
         self.tabalSimbolos.addContex()
 
     # Exit a parse tree produced by compiladoresParser#bloque.
     def exitBloque(self, ctx:compiladoresParser.BloqueContext):
+        ''' -> }'''
+        
         print(self.tabalSimbolos.ts)
         self.out.write(str(self.tabalSimbolos.ts))
         self.out.write("\n")
@@ -163,12 +165,30 @@ class MiListener(ParseTreeListener):
             #var.setName(tmp[3:])
         
         if "," in datos:
+            
+            '''  datos -> a = 2, b, c, d = 4 '''
             dato = datos.split(',')
+            
+            ''' 
+                datos -> a = 2, b, c, d = 4
+                datos.split(",")
+                dato [a = 2 , b , c , d = 4 ]
+            '''
+            
             for i in dato:
                 d = i.split("=")
                 varTmp = Variable().cloneType()
                 varTmp.setName(dato[0])
-                #TODO:continuar para validar si la variable ya fue creada anteriormente   
+                '''
+                    d -> nombreVar || nombreVar = 213
+                    d [ , ] -> d [ ] || d [ , ]
+                '''
+                #FIXME:ver porq mierda esta cosa no manda
+                self.isUsed(d[0],varTmp,0)
+                
+                
+                
+                   
         else:
             dato = datos.split("=")
             varTmp = Variable().cloneType()
@@ -312,6 +332,29 @@ class MiListener(ParseTreeListener):
 
         return func
 
-    #TODO:VER SI LAS VARIABLES YA ESTAN SUADAS
+
+    '''
+        Crear o inizializar = 0
+        Usar = 1
+    '''
+    def isUsed(self, id, var, case):
+        i, used = self.tabalSimbolos.searchId(id)
+        print("SOY LA FUNCION")
+        print(str(var))
+        
+        ''' no la encontramos en la tabla de simbolos '''
+        if used == False:
+            # caso variable
+            if case == 0 :
+                self.tabalSimbolos.addId(id, var, " ") 
+        
+        else:
+            if case == 1:
+                used['used'] = True
+                self.tabalSimbolos.addId(id, var, i)
+            else: 
+                print("ERROR : la variable ya existe.")
+            
+        
 
 del compiladoresParser
