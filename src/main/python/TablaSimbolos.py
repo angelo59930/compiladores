@@ -65,8 +65,20 @@ class Id:
     def cloneType(self):
         id = Id()
         id.setTipo(self.getTipo())
+        id.setName(self.getName())
+        id.setInit(self.getInit())
         id.setUsed(self.getUsed())
         return id
+    
+    def toDictionay(self):
+        dic = dict()
+        dic['name'] = self.name
+        dic['tipo'] = self.tipo
+        dic['initialized'] = self.initialized
+        dic['used'] = self.used
+        
+        return dic
+        
         
         
 
@@ -84,4 +96,14 @@ class Funcion(Id):
         self.arguments[-1]["type"] = tipo
         self.arguments[-1].get("name")
         self.arguments[-1]["name"] = name
+    
+    
+    def toDictionay(self):
+        dic = dict()
+        dic['name'] = self.name
+        dic['tipo'] = self.tipo
+        dic['initialized'] = self.initialized
+        dic['used'] = self.used
+        dic['arguments'] = self.arguments
+        return dic
         

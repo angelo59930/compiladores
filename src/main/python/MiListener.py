@@ -152,7 +152,7 @@ class MiListener(ParseTreeListener):
         pass
 
     # Exit a parse tree produced by compiladoresParser#declaracion.
-    def exitDeclaracion(self, ctx:compiladoresParser.DeclaracionContext):
+    def exitDeclaracion(self, ctx:compiladoresParser.DeclaracionContext): 
         var = Variable()
         
         tmp = ctx.getText()
@@ -177,17 +177,13 @@ class MiListener(ParseTreeListener):
             
             for i in dato:
                 d = i.split("=")
-                varTmp = Variable().cloneType()
+                varTmp = var.cloneType()
                 varTmp.setName(dato[0])
                 '''
                     d -> nombreVar || nombreVar = 213
                     d [ , ] -> d [ ] || d [ , ]
                 '''
-                #FIXME:ver porq mierda esta cosa no manda
-                self.isUsed(d[0],varTmp,0)
-                
-                
-                
+                self.isUsed(d[0],varTmp.toDictionay(),0)         
                    
         else:
             dato = datos.split("=")
@@ -342,12 +338,19 @@ class MiListener(ParseTreeListener):
         print("SOY LA FUNCION")
         print(str(var))
         
-        ''' no la encontramos en la tabla de simbolos '''
+        # no la encontramos en la tabla de simbolos
         if used == False:
+            # caso funcion
+            if case == 1 and "(" in id:
+                self.isUsed(id.split("(")[0], var, 1)
+            else:
+                print("ERROR")
+            
             # caso variable
             if case == 0 :
                 self.tabalSimbolos.addId(id, var, " ") 
-        
+                
+        #  esta en la tabla de simbolos 
         else:
             if case == 1:
                 used['used'] = True

@@ -82,7 +82,10 @@ bloqueif: IF control bloque;
 declaracion:
 	tdato ID
 	| tdato asignacion
-	| declaracion COMA asignacion
+	| tdato asignacion COMA declaracion
+	| tdato ID COMA declaracion
+	| ID
+	| asignacion
 	|;
 
 asignacion: ID ASSIG NUMERO | ID ASSIG itop | ID ASSIG llamadaFuncion;
