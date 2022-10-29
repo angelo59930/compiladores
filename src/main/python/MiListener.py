@@ -187,6 +187,8 @@ class MiListener(ParseTreeListener):
                     d -> nombreVar || nombreVar = 213
                     d [ , ] -> d [ ] || d [ , ]
                 '''
+                if(len(d)>1):
+                    varTmp.setInit(True)
                 self.isUsed(d[0],varTmp.toDictionay(),0)         
                    
         else:
