@@ -20,8 +20,8 @@ class TablaSimbolos:
          
         self.ts[tmp].get("name_"+str(name))
         self.ts[tmp]["name_"+str(name)] = name
-        self.ts[tmp].get("var_"+str(var))
-        self.ts[tmp]["var_"+str(var)] = var
+        self.ts[tmp].get("var_"+str(name))
+        self.ts[tmp]["var_"+str(name)] = var
     
     def searchId(self,id):
         for i in range(0, len(self.ts)):

@@ -83,6 +83,8 @@ class MiListener(ParseTreeListener):
         datos = ctx.getText()
         func.setInit(True)
         func = self.saveFunc(func,datos)
+        print("prototipado -> " + func.getName())
+        
         self.isUsed(func.getName(), func.toDictionay(), 0)
 
 
@@ -354,17 +356,16 @@ class MiListener(ParseTreeListener):
     '''
     def isUsed(self, id, var, case):
         i, used = self.tabalSimbolos.searchId(id)
-        print(str(var))
         
-        #FIXME:VERIFIAR PORQUE SE VA A ERROR
-        # no la encontramos en la tabla de simbolos
+        print(str(used))
+        
         if used == False:
             # caso funcion
             if case == 1: 
                 if "(" in id:
                     self.isUsed(id.split("(")[0], var, 1)
-            else:
-                print("ERROR")
+                else:
+                    print("ERROR: \""+ id + "\" no existe.")
             
             # caso variable
             if case == 0 :

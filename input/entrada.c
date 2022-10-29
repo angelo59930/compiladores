@@ -1,5 +1,5 @@
 
-int prototipado();
+int protEj();
 
 int global = 0;
 

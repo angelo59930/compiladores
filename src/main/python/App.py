@@ -15,7 +15,7 @@ def main(argv):
     miListener = MiListener()
     parser.addParseListener(miListener)
     tree = parser.programa()
-
+    #tree = parser.prog()
 
 if __name__ == '__main__':
     main(sys.argv)
