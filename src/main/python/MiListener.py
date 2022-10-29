@@ -83,7 +83,6 @@ class MiListener(ParseTreeListener):
         datos = ctx.getText()
         func.setInit(True)
         func = self.saveFunc(func,datos)
-        print("prototipado -> " + func.getName())
         
         self.isUsed(func.getName(), func.toDictionay(), 0)
 
@@ -101,9 +100,11 @@ class MiListener(ParseTreeListener):
     def enterArgumento(self, ctx:compiladoresParser.ArgumentoContext):
         pass
 
+
+    #TODO:GUARDAR LOS ARGUMENTOS DE LAS FUNCONES
     # Exit a parse tree produced by compiladoresParser#argumento.
     def exitArgumento(self, ctx:compiladoresParser.ArgumentoContext):
-        pass
+        self.enterDeclaracion(ctx)
 
 
     # Enter a parse tree produced by compiladoresParser#funcion.
@@ -181,7 +182,7 @@ class MiListener(ParseTreeListener):
             for i in dato:
                 d = i.split("=")
                 varTmp = var.cloneType()
-                varTmp.setName(dato[0])
+                varTmp.setName(d[0])
                 '''
                     d -> nombreVar || nombreVar = 213
                     d [ , ] -> d [ ] || d [ , ]
@@ -356,8 +357,6 @@ class MiListener(ParseTreeListener):
     '''
     def isUsed(self, id, var, case):
         i, used = self.tabalSimbolos.searchId(id)
-        
-        print(str(used))
         
         if used == False:
             # caso funcion
