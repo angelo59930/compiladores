@@ -14,6 +14,8 @@ class MiListener(ParseTreeListener):
     
     # TODO:Crear escritura de archivo
     tabalSimbolos = ts()
+    out = open("output/ts.txt", "w")
+    
 
     # Enter a parse tree produced by compiladoresParser#programa.
     def enterPrograma(self, ctx:compiladoresParser.ProgramaContext):
@@ -48,10 +50,14 @@ class MiListener(ParseTreeListener):
 
     # Exit a parse tree produced by compiladoresParser#bloque.
     def exitBloque(self, ctx:compiladoresParser.BloqueContext):
-        
         print(self.tabalSimbolos.ts)
-        
+        self.out.write(str(self.tabalSimbolos.ts))
+        self.out.write("\n")
         self.tabalSimbolos.removeContex()
+        
+        if(len(self.tabalSimbolos.ts) == 0):
+            self.out.close()
+        
 
 
     # Enter a parse tree produced by compiladoresParser#retorno.
