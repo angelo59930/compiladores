@@ -11,9 +11,7 @@ from TablaSimbolos import Variable
 
 # This class defines a complete listener for a parse tree produced by compiladoresParser.
 class MiListener(ParseTreeListener):
-    
-    #FIXME:VERIFICAR SI ESTA MAL EL COMPILADORES.G4 POR EL TEMA DE PROTOTIPADO Y DESARROLLO DE FUNCION
-    
+        
     tabalSimbolos = ts()
     out = open("output/ts.txt", "w")
     
@@ -82,6 +80,7 @@ class MiListener(ParseTreeListener):
         func = Funcion()
         datos = ctx.getText()
         func.setInit(True)
+        #print(datos)
         func = self.saveFunc(func,datos)
         
         self.isUsed(func.getName(), func.toDictionay(), 0)
@@ -93,19 +92,28 @@ class MiListener(ParseTreeListener):
 
     # Exit a parse tree produced by compiladoresParser#argumentos.
     def exitArgumentos(self, ctx:compiladoresParser.ArgumentosContext):
-        pass
-
+        '''
+        argumentos = ctx.getText()
+        argumentos = argumentos.split(",")
+        arrayTmp = []
+        tipo = " "
+        
+        for argumento in argumentos:
+            if argumento.startswith("int"):
+                tipo = "int"
+                argumento = argumento[3:]
+            
+            arrayTmp.append(dict({tipo : argumento}))
+        '''
 
     # Enter a parse tree produced by compiladoresParser#argumento.
     def enterArgumento(self, ctx:compiladoresParser.ArgumentoContext):
         pass
 
 
-    #TODO:GUARDAR LOS ARGUMENTOS DE LAS FUNCONES
     # Exit a parse tree produced by compiladoresParser#argumento.
     def exitArgumento(self, ctx:compiladoresParser.ArgumentoContext):
-        self.enterDeclaracion(ctx)
-
+        pass
 
     # Enter a parse tree produced by compiladoresParser#funcion.
     def enterFuncion(self, ctx:compiladoresParser.FuncionContext):
@@ -162,13 +170,14 @@ class MiListener(ParseTreeListener):
         
         tmp = ctx.getText()
         datos = ""
-    
         
         if tmp.startswith('int'):
             var.setTipo("int")
             datos = tmp[3:]
             #var.setName(tmp[3:])
         
+        #TODO:Preguntar el lunes
+        var.setUsed(True)
         
         if "," in datos:
             '''  datos -> a = 2, b, c, d = 4 '''
@@ -191,23 +200,23 @@ class MiListener(ParseTreeListener):
                 if(len(d)>1):
                     varTmp.setInit(True)
                 self.isUsed(d[0],varTmp.toDictionay(),0)         
-                   
+        
         else:
-            dato = datos.split("=")
+            d = datos.split("=")
             varTmp = var.cloneType()
-            varTmp.setName(dato[0])
-            varTmp.setInit(True)
-            self.isUsed(dato[0], varTmp.toDictionay(),0)
+            varTmp.setName(d[0])
+            if(len(d)>0):
+                varTmp.setInit(True)
+            self.isUsed(d[0], varTmp.toDictionay(),0)
 
     # Enter a parse tree produced by compiladoresParser#asignacion.
     def enterAsignacion(self, ctx:compiladoresParser.AsignacionContext):
         pass
-            
-        
-        
    
     # Exit a parse tree produced by compiladoresParser#asignacion.
     def exitAsignacion(self, ctx:compiladoresParser.AsignacionContext):
+        
+        #TODO:Preguntar al profe
         var = Variable()
         var.setUsed(True)
         datos = ctx.getText()
@@ -216,9 +225,9 @@ class MiListener(ParseTreeListener):
         v.setName(d[0])
 
         if(len(d) > 1):
-            self.isUsed(d[0], var.toDictionay(), 1)
+            self.isUsed(d[0], v.toDictionay(), 0)
             valor = d[1]
-            
+    
             posiblesVariables = []
 
          
@@ -234,9 +243,8 @@ class MiListener(ParseTreeListener):
                                 posiblesVariables.append(m)
             
             for i  in posiblesVariables:
-                self.existeVariable(i,"algo",1)
-            
-
+                self.isUsed(i," ",1)
+       
 
     # Enter a parse tree produced by compiladoresParser#tdato.
     def enterTdato(self, ctx:compiladoresParser.TdatoContext):
