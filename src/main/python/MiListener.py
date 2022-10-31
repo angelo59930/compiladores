@@ -54,6 +54,11 @@ class MiListener(ParseTreeListener):
         
         # print ('exitBloque: '+ str(self.tabalSimbolos.ts))
         self.out.write(str(self.tabalSimbolos.ts)+ "\n")
+
+        for i in self.tabalSimbolos.ts[-1]:
+            # if str(i).startswith('var_')
+            pass
+
         self.tabalSimbolos.removeContex()
         
         if(len(self.tabalSimbolos.ts) == 0):
@@ -91,19 +96,7 @@ class MiListener(ParseTreeListener):
 
     # Exit a parse tree produced by compiladoresParser#argumentos.
     def exitArgumentos(self, ctx:compiladoresParser.ArgumentosContext):
-        '''
-        argumentos = ctx.getText()
-        argumentos = argumentos.split(",")
-        arrayTmp = []
-        tipo = " "
-        
-        for argumento in argumentos:
-            if argumento.startswith("int"):
-                tipo = "int"
-                argumento = argumento[3:]
-            
-            arrayTmp.append(dict({tipo : argumento}))
-        '''
+        pass
 
     # Enter a parse tree produced by compiladoresParser#argumento.
     def enterArgumento(self, ctx:compiladoresParser.ArgumentoContext):
@@ -175,12 +168,6 @@ class MiListener(ParseTreeListener):
             var.setTipo("int")
             datos = tmp[3:]
             #var.setName(tmp[3:])
-        
-        # Preguntar el lunes
-        # var.setUsed(True)
-
-        print(str(datos))
-
 
         if "," in datos:
             '''  datos -> a = 2, b, c, d = 4 '''
@@ -200,8 +187,35 @@ class MiListener(ParseTreeListener):
                     d -> nombreVar || nombreVar = 213
                     d [ , ] -> d [ ] || d [ , ]
                 '''
+
                 if(len(d)>1):
+                    valor = d[1]
+    
+                    posiblesVariables = []
+                
+                    aux1 = valor.split('+')
+                    for i in aux1:
+                        aux2 = i.split('-')
+                        for j in aux2:
+                            aux3 = j.split('*')
+                            for k in aux3:
+                                aux4 = k.split('/')
+                                for m in aux4:
+                                    if not m.isnumeric() and m != "":
+                                        posiblesVariables.append(m)
+                    
+                    for i  in posiblesVariables:
+                        index, var = self.tabalSimbolos.searchId(str(i))
+                        # print( str(var))
+                        if var == False:
+                            print('ERROR: La variable \"'+ str(d[1]) +'\" no existe')
+                            return
+                        
+                        # print(str(i))
+                        # self.isUsed(i," ",1)
+                    
                     varTmp.setInit(True)
+
                 self.isUsed(d[0],varTmp.toDictionay(),0)         
         
         else:
@@ -210,19 +224,50 @@ class MiListener(ParseTreeListener):
             varTmp.setName(d[0])
             # print(varTmp.toDictionay())
             if(len(d)>1):
+                valor = d[1]
+    
+                posiblesVariables = []
+            
+                aux1 = valor.split('+')
+                for i in aux1:
+                    aux2 = i.split('-')
+                    for j in aux2:
+                        aux3 = j.split('*')
+                        for k in aux3:
+                            aux4 = k.split('/')
+                            for m in aux4:
+                                if not m.isnumeric() and m != "":
+                                    posiblesVariables.append(m)
+                
+                for i  in posiblesVariables:
+                    index, nose = self.tabalSimbolos.searchId(str(i))
+                    if nose == False:
+                        print('ERROR: La variable \"'+ str(d[1]) +'\" no existe')
+                        return
+                    
+                    # print(str(i))
+                    # self.isUsed(i," ",1)
+                
                 varTmp.setInit(True)
+
             self.isUsed(d[0], varTmp.toDictionay(),0)
             self.tabalSimbolos.printFile()
 
-    # Enter a parse tree produced by compiladoresParser#asignacion.
-    def enterAsignacion(self, ctx:compiladoresParser.AsignacionContext):
+     # Enter a parse tree produced by compiladoresParser#init.
+    def enterInit(self, ctx:compiladoresParser.InitContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#init.
+    def exitInit(self, ctx:compiladoresParser.InitContext):
         pass
    
+    # Enter a parse tree produced by compiladoresParser#asignacion.
+    def enterAsignacion(self, ctx:compiladoresParser.AsignacionContext):
+       pass
+
     # Exit a parse tree produced by compiladoresParser#asignacion.
     def exitAsignacion(self, ctx:compiladoresParser.AsignacionContext):
-        # print('Entre a asignacion')
-        
-        #TODO:Preguntar al profe
+    
         var = Variable()
         datos = ctx.getText()
         d = datos.split("=")

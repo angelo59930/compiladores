@@ -82,7 +82,7 @@ bloqueif: IF control bloque;
 declaracion:
 	tdato ID
 	| tdato init
-	| tdato init COMA conDeclaracion
+	| tdato init conDeclaracion
 	| tdato ID conDeclaracion
 	| 
 	|;

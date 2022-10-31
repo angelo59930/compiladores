@@ -1,7 +1,7 @@
 
 
 int main(int arg, int argv){
-  int a = 2;
+  int a, b;
 
   return 0;
 }
