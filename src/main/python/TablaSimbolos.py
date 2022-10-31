@@ -24,13 +24,16 @@ class TablaSimbolos:
         self.ts[tmp]["var_"+str(name)] = var
     
     def searchId(self,id):
-        for i in range(0, len(self.ts)):
+        
+        for i in range(len(self.ts)):
             if ("name_"+str(id)) in self.ts[-i]:
-                return i, self.ts[-i],get("var_"+str(id))
+                return i, True
             
-            return i, False
+        return i, False
         
+    def printFile(self):
         
+        print('tabla de simbolos: ' + str(self.ts) + '\n\n')   
     
 
 class Id:
@@ -61,6 +64,8 @@ class Id:
         self.used = used
     def getUsed(self):
         return self.used
+
+
 
     def cloneType(self):
         id = Id()

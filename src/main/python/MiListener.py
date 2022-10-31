@@ -5,14 +5,14 @@ if __name__ is not None and "." in __name__:
 else:
     from compiladoresParser import compiladoresParser
     
-from TablaSimbolos import TablaSimbolos as ts
+from TablaSimbolos import TablaSimbolos
 from TablaSimbolos import Funcion 
 from TablaSimbolos import Variable
 
 # This class defines a complete listener for a parse tree produced by compiladoresParser.
 class MiListener(ParseTreeListener):
         
-    tabalSimbolos = ts()
+    tabalSimbolos = TablaSimbolos()
     out = open("output/ts.txt", "w")
     
 
@@ -52,9 +52,8 @@ class MiListener(ParseTreeListener):
     def exitBloque(self, ctx:compiladoresParser.BloqueContext):
         ''' -> }'''
         
-        print(self.tabalSimbolos.ts)
-        self.out.write(str(self.tabalSimbolos.ts))
-        self.out.write("\n")
+        # print ('exitBloque: '+ str(self.tabalSimbolos.ts))
+        self.out.write(str(self.tabalSimbolos.ts)+ "\n")
         self.tabalSimbolos.removeContex()
         
         if(len(self.tabalSimbolos.ts) == 0):
@@ -166,6 +165,8 @@ class MiListener(ParseTreeListener):
 
     # Exit a parse tree produced by compiladoresParser#declaracion.
     def exitDeclaracion(self, ctx:compiladoresParser.DeclaracionContext): 
+        # print('Entre a declaracion')
+        print(str(ctx.getText()))
         var = Variable()
         
         tmp = ctx.getText()
@@ -205,9 +206,11 @@ class MiListener(ParseTreeListener):
             d = datos.split("=")
             varTmp = var.cloneType()
             varTmp.setName(d[0])
-            if(len(d)>0):
+            # print(varTmp.toDictionay())
+            if(len(d)>1):
                 varTmp.setInit(True)
             self.isUsed(d[0], varTmp.toDictionay(),0)
+            self.tabalSimbolos.printFile()
 
     # Enter a parse tree produced by compiladoresParser#asignacion.
     def enterAsignacion(self, ctx:compiladoresParser.AsignacionContext):
@@ -215,6 +218,7 @@ class MiListener(ParseTreeListener):
    
     # Exit a parse tree produced by compiladoresParser#asignacion.
     def exitAsignacion(self, ctx:compiladoresParser.AsignacionContext):
+        # print('Entre a asignacion')
         
         #TODO:Preguntar al profe
         var = Variable()
@@ -224,8 +228,10 @@ class MiListener(ParseTreeListener):
         v = var.cloneType()
         v.setName(d[0])
 
+        # print(str(d))
+
         if(len(d) > 1):
-            self.isUsed(d[0], v.toDictionay(), 0)
+            self.isUsed(d[0], v.toDictionay(), 1)
             valor = d[1]
     
             posiblesVariables = []
@@ -243,6 +249,7 @@ class MiListener(ParseTreeListener):
                                 posiblesVariables.append(m)
             
             for i  in posiblesVariables:
+                # print(str(i))
                 self.isUsed(i," ",1)
        
 
@@ -364,10 +371,12 @@ class MiListener(ParseTreeListener):
 
     '''
         Crear o inizializar = 0
-        Usar = 1
+        caso funcion o uso de variable = 1
     '''
     def isUsed(self, id, var, case):
         i, used = self.tabalSimbolos.searchId(id)
+
+        # print(str(id) + ' pos -> ' + str(i) + ' -> ' + str(used))
         
         if used == False:
             # caso funcion
@@ -377,17 +386,19 @@ class MiListener(ParseTreeListener):
                 else:
                     print("ERROR: \""+ id + "\" no existe.")
             
-            # caso variable
-            if case == 0 :
-                self.tabalSimbolos.addId(id, var, " ") 
-                
+            # caso agregar una variable
+            if case == 0:
+                self.tabalSimbolos.addId(id, var, " " ) 
+
+
         #  esta en la tabla de simbolos 
         else:
             if case == 1:
-                used['used'] = True
+                # print(var)
+                used = True
                 self.tabalSimbolos.addId(id, var, i)
             else: 
-                print("ERROR : la variable ya existe.")
+                print("ERROR : \""+str(id) + "\" la variable ya existe.")
             
         
 

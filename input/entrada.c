@@ -1,10 +1,9 @@
-int prot(int a, int b);
+
 
 int main(int arg, int argv){
+  int a, b;
 
-  int a = 2 + 2, b = 2;
-
-  a = b + 41;
+  a = b + 1;
 
   return 0;
 }

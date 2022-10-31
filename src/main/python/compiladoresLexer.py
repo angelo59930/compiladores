@@ -1,4 +1,4 @@
-# Generated from /home/angelo/Facultad/Tercero/DHS/test/src/main/python/compiladores.g4 by ANTLR 4.9.2
+# Generated from /home/kyanesdev/facultad/DHS/compiladores/src/main/python/compiladores.g4 by ANTLR 4.9.2
 from antlr4 import *
 from io import StringIO
 import sys

@@ -1,4 +1,4 @@
-# Generated from /home/angelo/Facultad/Tercero/DHS/test/src/main/python/compiladores.g4 by ANTLR 4.9.2
+# Generated from /home/kyanesdev/facultad/DHS/compiladores/src/main/python/compiladores.g4 by ANTLR 4.9.2
 from antlr4 import *
 if __name__ is not None and "." in __name__:
     from .compiladoresParser import compiladoresParser
@@ -131,6 +131,15 @@ class compiladoresListener(ParseTreeListener):
 
     # Exit a parse tree produced by compiladoresParser#declaracion.
     def exitDeclaracion(self, ctx:compiladoresParser.DeclaracionContext):
+        pass
+
+
+    # Enter a parse tree produced by compiladoresParser#conDeclaracion.
+    def enterConDeclaracion(self, ctx:compiladoresParser.ConDeclaracionContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#conDeclaracion.
+    def exitConDeclaracion(self, ctx:compiladoresParser.ConDeclaracionContext):
         pass
 
 
