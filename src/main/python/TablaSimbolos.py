@@ -31,8 +31,10 @@ class TablaSimbolos:
             
         return i, False
         
-    def printFile(self):
         
+    
+    
+    def printFile(self):
         print('tabla de simbolos: ' + str(self.ts) + '\n\n')   
     
 

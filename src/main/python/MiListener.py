@@ -55,10 +55,17 @@ class MiListener(ParseTreeListener):
         # print ('exitBloque: '+ str(self.tabalSimbolos.ts))
         self.out.write(str(self.tabalSimbolos.ts)+ "\n")
 
+        tmp = []
+        
         for i in self.tabalSimbolos.ts[-1]:
-            # if str(i).startswith('var_')
-            pass
-
+            if(str(i).startswith("var_")):
+                tmp.append(str(i)[4:])
+                
+        for i in tmp:
+            aux, obj = self.tabalSimbolos.searchId(i)
+            if obj["used"] == False:
+                print("WARNING: La variable \"" + obj["name"] + "\" no esta siendo usada.")
+        
         self.tabalSimbolos.removeContex()
         
         if(len(self.tabalSimbolos.ts) == 0):
