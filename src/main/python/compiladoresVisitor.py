@@ -84,6 +84,11 @@ class compiladoresVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by compiladoresParser#init.
+    def visitInit(self, ctx:compiladoresParser.InitContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by compiladoresParser#asignacion.
     def visitAsignacion(self, ctx:compiladoresParser.AsignacionContext):
         return self.visitChildren(ctx)

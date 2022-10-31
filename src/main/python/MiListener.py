@@ -166,7 +166,6 @@ class MiListener(ParseTreeListener):
     # Exit a parse tree produced by compiladoresParser#declaracion.
     def exitDeclaracion(self, ctx:compiladoresParser.DeclaracionContext): 
         # print('Entre a declaracion')
-        print(str(ctx.getText()))
         var = Variable()
         
         tmp = ctx.getText()
@@ -177,9 +176,12 @@ class MiListener(ParseTreeListener):
             datos = tmp[3:]
             #var.setName(tmp[3:])
         
-        #TODO:Preguntar el lunes
-        var.setUsed(True)
-        
+        # Preguntar el lunes
+        # var.setUsed(True)
+
+        print(str(datos))
+
+
         if "," in datos:
             '''  datos -> a = 2, b, c, d = 4 '''
             dato = datos.split(',')
@@ -222,13 +224,20 @@ class MiListener(ParseTreeListener):
         
         #TODO:Preguntar al profe
         var = Variable()
-        var.setUsed(True)
         datos = ctx.getText()
         d = datos.split("=")
         v = var.cloneType()
         v.setName(d[0])
 
-        # print(str(d))
+        i , varTmp = self.tabalSimbolos.searchId(str(d[0]))
+        
+        if varTmp == False: 
+            print('ERROR: La variable \"'+ str(d[0]) +'\" no existe')
+            return
+
+        varTmp['initialized'] = True
+
+        print(str(varTmp))
 
         if(len(d) > 1):
             self.isUsed(d[0], v.toDictionay(), 1)
@@ -249,7 +258,7 @@ class MiListener(ParseTreeListener):
                                 posiblesVariables.append(m)
             
             for i  in posiblesVariables:
-                # print(str(i))
+                print(str(i))
                 self.isUsed(i," ",1)
        
 
@@ -394,9 +403,11 @@ class MiListener(ParseTreeListener):
         #  esta en la tabla de simbolos 
         else:
             if case == 1:
-                # print(var)
-                used = True
-                self.tabalSimbolos.addId(id, var, i)
+                used['used'] = True
+                if used['initialized'] == False:
+                    print('WARNING: La variable \"' + str(id) + '\" no esta inicializada')
+                
+                self.tabalSimbolos.addId(id, str(used), i)
             else: 
                 print("ERROR : \""+str(id) + "\" la variable ya existe.")
             

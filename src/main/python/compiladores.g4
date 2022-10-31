@@ -81,13 +81,15 @@ bloqueif: IF control bloque;
 
 declaracion:
 	tdato ID
-	| tdato asignacion
-	| tdato asignacion COMA conDeclaracion
+	| tdato init
+	| tdato init COMA conDeclaracion
 	| tdato ID conDeclaracion
 	| 
 	|;
 
-conDeclaracion: COMA ID | COMA ID conDeclaracion | COMA asignacion conDeclaracion; 
+conDeclaracion: COMA ID | COMA ID conDeclaracion | COMA init conDeclaracion; 
+
+init:  ID ASSIG NUMERO | ID ASSIG itop | ID ASSIG llamadaFuncion;
 
 asignacion:  ID ASSIG NUMERO | ID ASSIG itop | ID ASSIG llamadaFuncion;
 

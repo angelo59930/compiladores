@@ -27,7 +27,7 @@ class TablaSimbolos:
         
         for i in range(len(self.ts)):
             if ("name_"+str(id)) in self.ts[-i]:
-                return i, True
+                return i, self.ts[-i].get("var_"+str(id))
             
         return i, False
         

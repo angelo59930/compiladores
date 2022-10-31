@@ -143,6 +143,15 @@ class compiladoresListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by compiladoresParser#init.
+    def enterInit(self, ctx:compiladoresParser.InitContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#init.
+    def exitInit(self, ctx:compiladoresParser.InitContext):
+        pass
+
+
     # Enter a parse tree produced by compiladoresParser#asignacion.
     def enterAsignacion(self, ctx:compiladoresParser.AsignacionContext):
         pass
