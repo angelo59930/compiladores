@@ -1,7 +1,7 @@
-
+int suma(int a, int b);
 
 int main(int arg, int argv){
-  int a, b;
+
 
   return 0;
 }

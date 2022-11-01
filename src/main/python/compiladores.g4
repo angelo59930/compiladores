@@ -83,11 +83,9 @@ declaracion:
 	tdato ID
 	| tdato init
 	| tdato init conDeclaracion
-	| tdato ID conDeclaracion
-	| 
-	|;
+	| tdato ID conDeclaracion;
 
-conDeclaracion: COMA ID | COMA ID conDeclaracion | COMA init conDeclaracion; 
+conDeclaracion: COMA ID | COMA ID conDeclaracion | COMA init conDeclaracion |; 
 
 init:  ID ASSIG NUMERO | ID ASSIG itop | ID ASSIG llamadaFuncion;
 

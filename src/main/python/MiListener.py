@@ -91,8 +91,10 @@ class MiListener(ParseTreeListener):
         func = Funcion()
         datos = ctx.getText()
         func.setInit(True)
-        #print(datos)
+        print(datos)
         func = self.saveFunc(func,datos)
+        
+        print("prot -> " + str(func.toDictionay()))
         
         self.isUsed(func.getName(), func.toDictionay(), 0)
 
