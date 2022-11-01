@@ -441,12 +441,12 @@ class MiListener(ParseTreeListener):
         caso funcion o uso de variable = 1
     '''
     def isUsed(self, id, var, case):
-        i, used = self.tabalSimbolos.searchId(id)
+        i, exist = self.tabalSimbolos.searchId(id)
 
-        print(str(id) + ' pos -> ' + str(i) + ' -> ' + str(used))
+        print(str(id) + ' pos -> ' + str(i) + ' -> ' + str(exist))
         print(str(var))
         
-        if used == False:
+        if exist == False:
             # caso funcion
             if case == 1: 
                 if "(" in id:
@@ -462,11 +462,11 @@ class MiListener(ParseTreeListener):
         #  esta en la tabla de simbolos 
         else:
             if case == 1:
-                used['used'] = True
-                if used['initialized'] == False:
+                exist['used'] = True
+                if exist['initialized'] == False:
                     print('WARNING: La variable \"' + str(id) + '\" no esta inicializada')
                 
-                self.tabalSimbolos.addId(id, str(used), i)
+                self.tabalSimbolos.addId(id, str(exist), i)
             else: 
                 print("ERROR : \""+str(id) + "\" la variable ya existe.")
             
