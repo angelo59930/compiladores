@@ -13,6 +13,7 @@ from TablaSimbolos import Variable
 class MiListener(ParseTreeListener):
         
     tabalSimbolos = TablaSimbolos()
+    i = 0;
     out = open("output/ts.txt", "w")
     
 
@@ -89,13 +90,12 @@ class MiListener(ParseTreeListener):
     # Exit a parse tree produced by compiladoresParser#prototipado.
     def exitPrototipado(self, ctx:compiladoresParser.PrototipadoContext):
         func = Funcion()
+        
+        print(self.i)
+        
         datos = ctx.getText()
         func.setInit(True)
-        print(datos)
         func = self.saveFunc(func,datos)
-        
-        print("prot -> " + str(func.toDictionay()))
-        
         self.isUsed(func.getName(), func.toDictionay(), 0)
 
 
@@ -407,7 +407,9 @@ class MiListener(ParseTreeListener):
 
 
     def saveFunc(self,func,datos):
-
+        
+        #print("saveFunc -> " + str(func.toDictionay()) + "\n\t datos -> "+ str(datos)+ "\n -----------------" )
+        print("\n\n funcion[] -> " + str(func.arguments) + "\n\n")
         if datos.startswith("int"):
             func.setTipo("int")
             datos = datos[3:]
@@ -429,6 +431,8 @@ class MiListener(ParseTreeListener):
                     nombre = i
                 func.addArguments(nombre,tipo)
 
+
+        #print("Retorno de saveFunc:\n\tsaveFunc -> " + str(func.toDictionay()) +"\n\n -----------------")
         return func
 
 
@@ -439,7 +443,8 @@ class MiListener(ParseTreeListener):
     def isUsed(self, id, var, case):
         i, used = self.tabalSimbolos.searchId(id)
 
-        # print(str(id) + ' pos -> ' + str(i) + ' -> ' + str(used))
+        print(str(id) + ' pos -> ' + str(i) + ' -> ' + str(used))
+        print(str(var))
         
         if used == False:
             # caso funcion
