@@ -89,14 +89,11 @@ class MiListener(ParseTreeListener):
 
     # Exit a parse tree produced by compiladoresParser#prototipado.
     def exitPrototipado(self, ctx:compiladoresParser.PrototipadoContext):
-        func = Funcion()
-        
-        print(self.i)
-        
+        fuc = Funcion()
         datos = ctx.getText()
-        func.setInit(True)
-        func = self.saveFunc(func,datos)
-        self.isUsed(func.getName(), func.toDictionay(), 0)
+        fuc.setInit(True)
+        fuc = self.generateFunc(fuc,datos)
+        self.isUsed(fuc.getName(), fuc.toDictionay(), 0)
 
 
     # Enter a parse tree produced by compiladoresParser#argumentos.
@@ -291,7 +288,6 @@ class MiListener(ParseTreeListener):
 
         varTmp['initialized'] = True
 
-        print(str(varTmp))
 
         if(len(d) > 1):
             self.isUsed(d[0], v.toDictionay(), 1)
@@ -312,7 +308,6 @@ class MiListener(ParseTreeListener):
                                 posiblesVariables.append(m)
             
             for i  in posiblesVariables:
-                print(str(i))
                 self.isUsed(i," ",1)
        
 
@@ -406,10 +401,10 @@ class MiListener(ParseTreeListener):
         pass
 
 
-    def saveFunc(self,func,datos):
+    def generateFunc(self,func,datos):
         
-        #print("saveFunc -> " + str(func.toDictionay()) + "\n\t datos -> "+ str(datos)+ "\n -----------------" )
-        print("\n\n funcion[] -> " + str(func.arguments) + "\n\n")
+        func.arguments = []
+
         if datos.startswith("int"):
             func.setTipo("int")
             datos = datos[3:]
@@ -422,17 +417,11 @@ class MiListener(ParseTreeListener):
         if "," in datos:
             dato = datos.split(",")
             tipo = ""
-
             for i in dato:
                 if "int" in i:
                     tipo = "int"
                     nombre = i[3:]
-                else:
-                    nombre = i
                 func.addArguments(nombre,tipo)
-
-
-        #print("Retorno de saveFunc:\n\tsaveFunc -> " + str(func.toDictionay()) +"\n\n -----------------")
         return func
 
 
@@ -443,9 +432,6 @@ class MiListener(ParseTreeListener):
     def isUsed(self, id, var, case):
         i, exist = self.tabalSimbolos.searchId(id)
 
-        print(str(id) + ' pos -> ' + str(i) + ' -> ' + str(exist))
-        print(str(var))
-        
         if exist == False:
             # caso funcion
             if case == 1: 

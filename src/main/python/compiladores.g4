@@ -63,7 +63,7 @@ argumento: tdato ID ;
 funcion: prototipado bloque;
 
 llamadaFuncion:
-	ID PA (argumentos |) PC 
+	ID PA (argumentos) PC
 	| ID PA PC;
 
 bloquefor:

@@ -103,7 +103,7 @@ class Funcion(Id):
         self.arguments[-1]["type"] = tipo
         self.arguments[-1].get("name")
         self.arguments[-1]["name"] = name
-    
+
     
     def toDictionay(self):
         dic = dict()
