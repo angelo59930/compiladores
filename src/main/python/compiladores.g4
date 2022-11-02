@@ -47,10 +47,11 @@ instruccion:
 	| bloquefor
 	| prototipado PYC
 	| funcion
-	| llamadaFuncion PYC
-	;
+	| llamadaFuncion PYC;
 
-bloque: LLA instrucciones LLC | LLA instrucciones retorno PYC LLC;
+bloque:
+	LLA instrucciones LLC
+	| LLA instrucciones retorno PYC LLC;
 
 retorno: RETORNO | RETORNO ID | RETORNO NUMERO;
 
@@ -58,13 +59,13 @@ prototipado: tdato ID PA (argumentos |) PC;
 
 argumentos: argumento | argumento COMA argumentos |;
 
-argumento: tdato ID ;
+argumento: tdato ID;
 
 funcion: prototipado bloque;
 
-llamadaFuncion:
-	ID PA (argumentos) PC
-	| ID PA PC;
+parametros: ID | ID COMA parametros |;
+
+llamadaFuncion: ID PA (parametros|) PC | ID PA PC;
 
 bloquefor:
 	FOR PA (declaracion | asignacion) PYC cmp PYC asignacion PC bloque
@@ -85,11 +86,18 @@ declaracion:
 	| tdato init conDeclaracion
 	| tdato ID conDeclaracion;
 
-conDeclaracion: COMA ID | COMA ID conDeclaracion | COMA init conDeclaracion |; 
+conDeclaracion:
+	COMA ID
+	| COMA ID conDeclaracion
+	| COMA init conDeclaracion
+	|;
 
-init:  ID ASSIG NUMERO | ID ASSIG itop | ID ASSIG llamadaFuncion;
+init: ID ASSIG NUMERO | ID ASSIG itop | ID ASSIG llamadaFuncion;
 
-asignacion:  ID ASSIG NUMERO | ID ASSIG itop | ID ASSIG llamadaFuncion;
+asignacion:
+	ID ASSIG NUMERO
+	| ID ASSIG itop
+	| ID ASSIG llamadaFuncion;
 
 tdato: INT;
 

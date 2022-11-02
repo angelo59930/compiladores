@@ -4,7 +4,8 @@ int main(int arg, int argv){
 
   int a;
 
-  a = suma(b);
+  a = suma(a,a);
+
 
   return 0;
 }

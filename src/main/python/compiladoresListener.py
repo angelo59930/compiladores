@@ -89,6 +89,15 @@ class compiladoresListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by compiladoresParser#parametros.
+    def enterParametros(self, ctx:compiladoresParser.ParametrosContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#parametros.
+    def exitParametros(self, ctx:compiladoresParser.ParametrosContext):
+        pass
+
+
     # Enter a parse tree produced by compiladoresParser#llamadaFuncion.
     def enterLlamadaFuncion(self, ctx:compiladoresParser.LlamadaFuncionContext):
         pass
