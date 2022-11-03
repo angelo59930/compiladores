@@ -53,7 +53,6 @@ class MiListener(ParseTreeListener):
     def exitBloque(self, ctx:compiladoresParser.BloqueContext):
         ''' -> }'''
         
-        # print ('exitBloque: '+ str(self.tabalSimbolos.ts))
         self.out.write(str(self.tabalSimbolos.ts)+ "\n")
 
         tmp = []
@@ -64,8 +63,6 @@ class MiListener(ParseTreeListener):
                 
         for i in tmp:
             aux, obj = self.tabalSimbolos.searchId(i)
-            if obj['used'] == False:
-                print("WARNING: La variable \"" + obj["name"] + "\" no esta siendo usada.")
         
         self.tabalSimbolos.removeContex()
         
@@ -131,6 +128,15 @@ class MiListener(ParseTreeListener):
     def exitLlamadaFuncion(self, ctx:compiladoresParser.LlamadaFuncionContext):
         pass
 
+    # Enter a parse tree produced by compiladoresParser#parametros.
+    def enterParametros(self, ctx:compiladoresParser.ParametrosContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#parametros.
+    def exitParametros(self, ctx:compiladoresParser.ParametrosContext):
+        pass
+
+
 
     # Enter a parse tree produced by compiladoresParser#bloquefor.
     def enterBloquefor(self, ctx:compiladoresParser.BloqueforContext):
@@ -165,7 +171,7 @@ class MiListener(ParseTreeListener):
 
     # Exit a parse tree produced by compiladoresParser#declaracion.
     def exitDeclaracion(self, ctx:compiladoresParser.DeclaracionContext): 
-        # print('Entre a declaracion')
+
         var = Variable()
         
         tmp = ctx.getText()
@@ -213,13 +219,11 @@ class MiListener(ParseTreeListener):
                     
                     for i  in posiblesVariables:
                         index, var = self.tabalSimbolos.searchId(str(i))
-                        # print( str(var))
+
                         if var == False:
                             print('ERROR: La variable \"'+ str(d[1]) +'\" no existe')
                             return
                         
-                        # print(str(i))
-                        # self.isUsed(i," ",1)
                     
                     varTmp.setInit(True)
 
@@ -229,7 +233,6 @@ class MiListener(ParseTreeListener):
             d = datos.split("=")
             varTmp = var.cloneType()
             varTmp.setName(d[0])
-            # print(varTmp.toDictionay())
             if(len(d)>1):
                 valor = d[1]
     
@@ -252,13 +255,10 @@ class MiListener(ParseTreeListener):
                         print('ERROR: La variable \"'+ str(d[1]) +'\" no existe')
                         return
                     
-                    # print(str(i))
-                    # self.isUsed(i," ",1)
                 
                 varTmp.setInit(True)
 
             self.isUsed(d[0], varTmp.toDictionay(),0)
-            self.tabalSimbolos.printFile()
 
 
      # Enter a parse tree produced by compiladoresParser#init.
@@ -289,14 +289,23 @@ class MiListener(ParseTreeListener):
 
         varTmp['initialized'] = True
 
-
+        valor = d[1].split("(")
+        
         if(len(d) > 1):
             self.isUsed(d[0], v.toDictionay(), 1)
             valor = d[1]
     
             posiblesVariables = []
+            
+            test = valor.split("(")
+            
+            if(len(test)>1):
+                test = test[1].split(")")
+                test = test[0].split(",")
+                for i in test:
+                    self.exist(i)
 
-         
+        else: 
             aux1 = valor.split('+')
             for i in aux1:
                 aux2 = i.split('-')
@@ -307,6 +316,8 @@ class MiListener(ParseTreeListener):
                         for m in aux4:
                             if not m.isnumeric() and m != "":
                                 posiblesVariables.append(m)
+            
+            
             
             for i  in posiblesVariables:
                 self.isUsed(i," ",1)
@@ -457,6 +468,13 @@ class MiListener(ParseTreeListener):
             else: 
                 print("ERROR : \""+str(id) + "\" la variable ya existe.")
             
-        
+    def exist(self, id):
+        print(id)
+        i, test = self.tabalSimbolos.searchId(id)
+        #test = False
+        if test == False:
+            print("ERROR : \""+str(id) + "\" la variable NO existe.")
+            return
+           
 
 del compiladoresParser

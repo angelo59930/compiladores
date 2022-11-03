@@ -1,11 +1,20 @@
-int suma(int a , int b);
+int suma(int k){
+  int b;
+}
+
+int resta(int x){
+  int c;
+}
 
 int main(int arg, int argv){
 
-  int a;
+  int a, b;
 
-  a = suma(2,2);
+  b = 2;
+  a = suma(a);
 
   return 0;
 }
+
+
 

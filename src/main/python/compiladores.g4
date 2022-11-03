@@ -63,12 +63,14 @@ argumento: tdato ID;
 
 funcion: prototipado bloque;
 
-parametros: ID | ID COMA parametros |
-NUMERO COMA parametros | 
-NUMERO |
-;
+parametros:
+	ID
+	| ID COMA parametros
+	| NUMERO COMA parametros
+	| NUMERO
+	|;
 
-llamadaFuncion: ID PA (parametros|) PC | ID PA PC;
+llamadaFuncion: ID PA (parametros |) PC | ID PA PC;
 
 bloquefor:
 	FOR PA (declaracion | asignacion) PYC cmp PYC asignacion PC bloque
