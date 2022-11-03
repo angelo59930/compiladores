@@ -64,7 +64,7 @@ class MiListener(ParseTreeListener):
                 
         for i in tmp:
             aux, obj = self.tabalSimbolos.searchId(i)
-            if obj["used"] == False:
+            if obj['used'] == False:
                 print("WARNING: La variable \"" + obj["name"] + "\" no esta siendo usada.")
         
         self.tabalSimbolos.removeContex()
@@ -94,6 +94,7 @@ class MiListener(ParseTreeListener):
         fuc.setInit(True)
         fuc = self.generateFunc(fuc,datos)
         self.isUsed(fuc.getName(), fuc.toDictionay(), 0)
+
 
 
     # Enter a parse tree produced by compiladoresParser#argumentos.
@@ -259,6 +260,7 @@ class MiListener(ParseTreeListener):
             self.isUsed(d[0], varTmp.toDictionay(),0)
             self.tabalSimbolos.printFile()
 
+
      # Enter a parse tree produced by compiladoresParser#init.
     def enterInit(self, ctx:compiladoresParser.InitContext):
         pass
@@ -273,7 +275,6 @@ class MiListener(ParseTreeListener):
 
     # Exit a parse tree produced by compiladoresParser#asignacion.
     def exitAsignacion(self, ctx:compiladoresParser.AsignacionContext):
-    
         var = Variable()
         datos = ctx.getText()
         d = datos.split("=")

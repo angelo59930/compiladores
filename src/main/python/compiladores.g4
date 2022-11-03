@@ -63,7 +63,10 @@ argumento: tdato ID;
 
 funcion: prototipado bloque;
 
-parametros: ID | ID COMA parametros |;
+parametros: ID | ID COMA parametros |
+NUMERO COMA parametros | 
+NUMERO |
+;
 
 llamadaFuncion: ID PA (parametros|) PC | ID PA PC;
 
