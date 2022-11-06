@@ -1,10 +1,15 @@
-int suma(int a , int b);
 
 int main(int arg, int argv){
 
   int a;
+  int b;
+  int c;
 
-  a = suma(2,2);
+  a = 2;
+
+  b = 3;
+
+  c = a + b;
 
   return 0;
 }
