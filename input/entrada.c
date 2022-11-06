@@ -14,7 +14,7 @@ int main(int arg, int argv){
 
   a = 2;
 
-  b = 3;
+  b = resta(a);
 
   c = a + b;
 
