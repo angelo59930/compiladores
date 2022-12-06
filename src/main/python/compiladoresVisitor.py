@@ -79,6 +79,11 @@ class compiladoresVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by compiladoresParser#bloqueElse.
+    def visitBloqueElse(self, ctx:compiladoresParser.BloqueElseContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by compiladoresParser#declaracion.
     def visitDeclaracion(self, ctx:compiladoresParser.DeclaracionContext):
         return self.visitChildren(ctx)

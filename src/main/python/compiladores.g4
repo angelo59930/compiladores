@@ -23,6 +23,7 @@ DISTINTO: '!=';
 INT: 'int';
 
 IF: 'if';
+ELSE: 'else';
 WHILE: 'while';
 FOR: 'for';
 
@@ -53,7 +54,7 @@ bloque:
 	LLA instrucciones LLC
 	| LLA instrucciones retorno PYC LLC;
 
-retorno: RETORNO | RETORNO ID | RETORNO NUMERO;
+retorno: RETORNO | RETORNO ID | RETORNO NUMERO | RETORNO oparit;
 
 prototipado: tdato ID PA (argumentos |) PC;
 
@@ -83,7 +84,9 @@ bloquefor:
 
 bloquewhile: WHILE control bloque;
 
-bloqueif: IF control bloque;
+bloqueif: IF control bloque | IF control bloque bloqueElse;
+
+bloqueElse: ELSE bloque;
 
 declaracion:
 	tdato ID

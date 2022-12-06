@@ -1,33 +1,39 @@
-int suma (int a, int b);
+int suma(int k, int j);
 
-int resta (int a, int b);
+int resta(int x, int j);
 
-int main(){
+int main(int arg, int argv){
 
-  int a, b;
-  int c = 0, d = 8;
-  int e = c + d;
+  int a;
+  int b;
+  int c;
 
-  if(e == 8){
-    a = 1;
-  }else{
-    a = 0;
+  a = 2;
+
+  b = resta(a, c);
+
+  c = a + b;
+
+
+  if(a > 2){
+    a = a + 1;
+  }
+  else {
+    a = 2;
   }
 
-  while(a != 1){
-    b = a * 5 + 2;
-    a++;
+  while( a == 2){
+    a = a + 1;
   }
 
-  d = suma(b, e);
 
-  return 0;
-}
-
-int suma(int a, int b){
   return a + b;
 }
 
-int resta(int a, int b){
-  return a - b;
+int suma(int k, int j){
+  return k + j;
+}
+
+int resta(int x, int j){
+  return x - j; 
 }
