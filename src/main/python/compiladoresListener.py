@@ -278,5 +278,23 @@ class compiladoresListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by compiladoresParser#incrementoUnario.
+    def enterIncrementoUnario(self, ctx:compiladoresParser.IncrementoUnarioContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#incrementoUnario.
+    def exitIncrementoUnario(self, ctx:compiladoresParser.IncrementoUnarioContext):
+        pass
+
+
+    # Enter a parse tree produced by compiladoresParser#decrementoUnario.
+    def enterDecrementoUnario(self, ctx:compiladoresParser.DecrementoUnarioContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#decrementoUnario.
+    def exitDecrementoUnario(self, ctx:compiladoresParser.DecrementoUnarioContext):
+        pass
+
+
 
 del compiladoresParser

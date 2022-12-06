@@ -17,6 +17,7 @@ int main(){
 
   while (a != 1){
     b = a * 5 + 2;
+    a--;
   }
 
   d = suma(b, e);

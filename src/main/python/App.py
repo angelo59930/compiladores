@@ -2,7 +2,7 @@ import sys
 from antlr4 import *
 from compiladoresLexer  import compiladoresLexer
 from compiladoresParser import compiladoresParser
-from MiListener import MiListener
+from NewMyListener import compiladoresListener
 
 def main(argv):
     archivo = "input/entrada.c"

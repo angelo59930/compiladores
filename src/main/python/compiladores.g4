@@ -15,6 +15,8 @@ MULT: '*';
 REST: '-';
 DIV: '/';
 PUNTO: '.';
+INCREMENTO: '++';
+DECREMENTO: '--';
 
 MENOR: '<';
 MAYOR: '>';
@@ -52,6 +54,8 @@ instruccion:
 	bloque
 	| declaracion PYC
 	| asignacion PYC
+	| incrementoUnario PYC
+	| decrementoUnario PYC
 	| bloqueif
 	| bloquewhile
 	| bloquefor
@@ -149,3 +153,7 @@ cmp:
 	| NUMERO MENOR ID
 	| NUMERO IGUALDAD ID
 	| NUMERO DISTINTO ID;
+
+incrementoUnario: ID INCREMENTO;
+
+decrementoUnario: ID DECREMENTO;

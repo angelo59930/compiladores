@@ -159,5 +159,15 @@ class compiladoresVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by compiladoresParser#incrementoUnario.
+    def visitIncrementoUnario(self, ctx:compiladoresParser.IncrementoUnarioContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by compiladoresParser#decrementoUnario.
+    def visitDecrementoUnario(self, ctx:compiladoresParser.DecrementoUnarioContext):
+        return self.visitChildren(ctx)
+
+
 
 del compiladoresParser
