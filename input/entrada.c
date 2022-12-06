@@ -1,14 +1,14 @@
 int suma(int a, int b);
 
-int resta(int a, int b);
+float resta(int a, int b);
 
 int main(){
 
-  int a, b;
+  float a, b = 15651.516;
   int c = 0, d = 8;
   int e = c + d;
 
-  if (e == 8){
+  if (e == 8 && e == 2){
     a = 1;
   }
   else{
@@ -28,6 +28,6 @@ int suma(int a, int b){
   return a + b;
 }
 
-int resta(int a, int b){
+float resta(int a, int b){
   return a - b;
 }

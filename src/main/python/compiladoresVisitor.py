@@ -149,6 +149,11 @@ class compiladoresVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by compiladoresParser#cmps.
+    def visitCmps(self, ctx:compiladoresParser.CmpsContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by compiladoresParser#cmp.
     def visitCmp(self, ctx:compiladoresParser.CmpContext):
         return self.visitChildren(ctx)

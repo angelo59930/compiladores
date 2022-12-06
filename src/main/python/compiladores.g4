@@ -14,20 +14,29 @@ SUMA: '+';
 MULT: '*';
 REST: '-';
 DIV: '/';
+PUNTO: '.';
 
 MENOR: '<';
 MAYOR: '>';
 IGUALDAD: '==';
 DISTINTO: '!=';
+AND: '&&';
+OR: '||';
 
 INT: 'int';
+FLOAT: 'float';
 
 IF: 'if';
 ELSE: 'else';
 WHILE: 'while';
 FOR: 'for';
 
-NUMERO: DIGITO+;
+// NUMERO = 6.+981298+1+6
+NUMERO:
+	DIGITO+
+	| '-' DIGITO+
+	| DIGITO+ PUNTO DIGITO+
+	| '-' DIGITO+ PUNTO DIGITO+;
 
 RETORNO: 'return';
 
@@ -107,7 +116,7 @@ asignacion:
 	| ID ASSIG itop
 	| ID ASSIG llamadaFuncion;
 
-tdato: INT;
+tdato: INT | FLOAT;
 
 itop: oparit itop |;
 // c = a + b + d + f / r * q
@@ -123,7 +132,9 @@ factor: ID | NUMERO | PA exp PC;
 
 f: MULT factor f | DIV factor f |;
 
-control: PA cmp PC;
+control: PA cmps PC;
+
+cmps: cmp | cmp AND cmps | cmp OR cmps;
 
 cmp:
 	ID MAYOR NUMERO

@@ -260,6 +260,15 @@ class compiladoresListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by compiladoresParser#cmps.
+    def enterCmps(self, ctx:compiladoresParser.CmpsContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#cmps.
+    def exitCmps(self, ctx:compiladoresParser.CmpsContext):
+        pass
+
+
     # Enter a parse tree produced by compiladoresParser#cmp.
     def enterCmp(self, ctx:compiladoresParser.CmpContext):
         pass
