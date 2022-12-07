@@ -179,6 +179,15 @@ class compiladoresListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by compiladoresParser#asignarFuncion.
+    def enterAsignarFuncion(self, ctx:compiladoresParser.AsignarFuncionContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#asignarFuncion.
+    def exitAsignarFuncion(self, ctx:compiladoresParser.AsignarFuncionContext):
+        pass
+
+
     # Enter a parse tree produced by compiladoresParser#tdato.
     def enterTdato(self, ctx:compiladoresParser.TdatoContext):
         pass

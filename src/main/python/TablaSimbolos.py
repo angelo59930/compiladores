@@ -9,108 +9,61 @@ class TablaSimbolos:
     
     ts = [dict()]
     
+    # cada vez que se mete en un blockInst se debe crear un contexto
     def addContex(self):
         self.ts.append(dict())
     
+    # cada vez que se sale en un blockInst se debe borrar el ULTIMO un contexto
     def removeContex(self):
         self.ts.pop()
         
-    def addId(self,name,var, i):
-        tmp = -1 if i == " " else -i 
-         
-        self.ts[tmp].get("name_"+str(name))
-        self.ts[tmp]["name_"+str(name)] = name
-        self.ts[tmp].get("var_"+str(name))
-        self.ts[tmp]["var_"+str(name)] = var
+    # Mete la variable en el ultimo diccionario
+    # dict('key':'value')
+    # [... , {'nomID' : ID }]
+    def addId(self, id):
+        self.ts[-1][id.name] = id
     
-    def searchId(self,id):
-        
-        for i in range(len(self.ts)):
-            if ("name_"+str(id)) in self.ts[-i]:
-                return i, self.ts[-i].get("var_"+str(id))
-            
-        return i, False
-        
-        
-    
-    
-    def printFile(self):
-        print('tabla de simbolos: ' + str(self.ts) + '\n\n')   
+    # Buscar a partir de una Key si esta se encuentra en algun contexto
+    # buscamos la key = 'a'
+    # context [{'c':c},{ 'a':a , 'b':b },{}]
+    # la key 'a' esta en el la pos 1 ( ts[1] ) 
+    # la funcion nos deberia retornar True 
+    def findByKey(self,key):
+        for context in self.ts:
+            if key in context:
+                return True
+        return False
     
 
 class Id:
     
-    def __init__(self):
-        self.name = ""
-        self.tipo = ""
+    # Una ID debe tener un nombre y un tipo
+    # name -> identificador
+    # type -> tipo de ID
+    def __init__(self,name, type):
+        self.name = name
+        self.type = type
         self.initialized = False
         self.used = False
-    
-    def setName(self, name):
-        self.name = name
-    def getName(self):
-        return self.name
-    
-    def setTipo(self, tipo):
-        self.tipo = tipo
-    def getTipo(self):
-        return self.tipo
-    
-    
-    def setInit(self, init):
-        self.initialized = init
-    def getInit(self):
-        return self.initialized
-    
-    def setUsed(self, used):
-        self.used = used
-    def getUsed(self):
-        return self.used
-
-
-
-    def cloneType(self):
-        id = Id()
-        id.setTipo(self.getTipo())
-        id.setName(self.getName())
-        id.setInit(self.getInit())
-        id.setUsed(self.getUsed())
-        return id
-    
-    def toDictionay(self):
-        dic = dict()
-        dic['name'] = self.name
-        dic['tipo'] = self.tipo
-        dic['initialized'] = self.initialized
-        dic['used'] = self.used
+        self.varFunc = "variable" 
         
-        return dic
-        
-        
-        
+    def toString(self):
+        return f'({self.name},{self.type},{self.initialized},{self.used},{self.varFunc})'
+    
 
 
 class Variable(Id):
     pass
 
-class Funcion(Id):
-    arguments = []
+class Function(Id):
     
-    def addArguments(self,name,tipo):
-        self.arguments.append(dict())
-        
-        self.arguments[-1].get("type")
-        self.arguments[-1]["type"] = tipo
-        self.arguments[-1].get("name")
-        self.arguments[-1]["name"] = name
-
+    # Una fucion debe recibir un nombre, tipo y parametros
+    # name -> nombre de la funcion
+    # type -> tipo de funcion
+    # parameter -> ARREGLO de parametros de la funcion
+    def __init__(self, name, type, parameters):
+        super().__init__(name, type)
+        self.parameters = parameters
+        self.varFunc = "function"
     
-    def toDictionay(self):
-        dic = dict()
-        dic['name'] = self.name
-        dic['tipo'] = self.tipo
-        dic['initialized'] = self.initialized
-        dic['used'] = self.used
-        dic['arguments'] = self.arguments
-        return dic
         

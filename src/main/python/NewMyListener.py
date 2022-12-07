@@ -1,18 +1,30 @@
 # Generated from /home/angelo/Facultad/Tercero/DHS/compiladores/src/main/python/compiladores.g4 by ANTLR 4.9.2
 from antlr4 import *
+from TablaSimbolos import TablaSimbolos
+from TablaSimbolos import Function 
+from TablaSimbolos import Variable
 if __name__ is not None and "." in __name__:
     from .compiladoresParser import compiladoresParser
 else:
     from compiladoresParser import compiladoresParser
 
-# This class defines a complete listener for a parse tree produced by compiladoresParser.
+# TODO: 
+# En el contexto GLOBAL se pueden guardar las referencias a las FUNCIONES
+# esto nos sirve para identificar si existe la funion 'main', las variables y los prototipos
+# a su vez con esto podriamos saber si un prototipo esta implementado o no
+# o si una funcion despues del main se encuentra declarada y no prototipada
 class compiladoresListener(ParseTreeListener):
 
-    # Enter a parse tree produced by compiladoresParser#programa.
+    tablaSimbolos = TablaSimbolos()
+    ids = dict()
+    
+    
+    
+    # abrimos el archivo para escribir los contextos
     def enterPrograma(self, ctx:compiladoresParser.ProgramaContext):
         pass
 
-    # Exit a parse tree produced by compiladoresParser#programa.
+    # escribinos y por ultimo cerramos el archivos
     def exitPrograma(self, ctx:compiladoresParser.ProgramaContext):
         pass
 
@@ -35,13 +47,16 @@ class compiladoresListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by compiladoresParser#bloque.
+    # cuando entramos en un bloque AÑADIMOS un contexto
+    # se entra en un bloque cuando encontramos -> '{'
     def enterBloque(self, ctx:compiladoresParser.BloqueContext):
-        pass
+        self.tablaSimbolos.addContex()
 
-    # Exit a parse tree produced by compiladoresParser#bloque.
+    # cuando salimos de un bloque REMOVEMOS un contexto
+    # se sale de un bloque cuando encontramos -> '}'
     def exitBloque(self, ctx:compiladoresParser.BloqueContext):
-        pass
+        #print(self.tablaSimbolos.ts.__str__())
+        self.tablaSimbolos.removeContex()
 
 
     # Enter a parse tree produced by compiladoresParser#retorno.
@@ -147,10 +162,39 @@ class compiladoresListener(ParseTreeListener):
     def enterDeclaracion(self, ctx:compiladoresParser.DeclaracionContext):
         pass
 
-    # Exit a parse tree produced by compiladoresParser#declaracion.
     def exitDeclaracion(self, ctx:compiladoresParser.DeclaracionContext):
-        pass
+        tipo = str(ctx.getChild(0).getChild(0)) # tipo de todas las variables
+        tmp = ctx.getText()
+        tmpData = ''
+        dataType = ''
+        
+        if tmp.startswith('int'):
+            dataType = 'int'
+            datosTmp = tmp[3:]
+            tmpData = datosTmp.split(',')[0]            
+        else:
+            dataType = 'float'
+            datosTmp = tmp[5:]
+            tmpData = datosTmp.split(',')[0]
+        
+        if not '=' in tmpData:
+            id = Variable(tmpData[0], dataType)
+            self.ids[tmpData[0]] = id
 
+        for id in self.ids:
+            value = self.ids[id]
+            value.type = dataType
+        
+        
+        for id in self.ids:
+            value = self.ids[id]
+            print(f'DATATYPE -> {value.type}')
+        
+        self.tablaSimbolos.ts[-1] = self.ids.copy()
+        
+        self.ids.clear()
+        
+        
 
     # Enter a parse tree produced by compiladoresParser#conDeclaracion.
     def enterConDeclaracion(self, ctx:compiladoresParser.ConDeclaracionContext):
@@ -158,7 +202,12 @@ class compiladoresListener(ParseTreeListener):
 
     # Exit a parse tree produced by compiladoresParser#conDeclaracion.
     def exitConDeclaracion(self, ctx:compiladoresParser.ConDeclaracionContext):
-        pass
+        
+        if not ctx.getText() == "" and not '=' in ctx.getText() :
+           nombre = str(ctx.getChild(1))
+           id = Variable(nombre, None)
+           self.ids[nombre] = id
+            
 
 
     # Enter a parse tree produced by compiladoresParser#init.
@@ -167,17 +216,45 @@ class compiladoresListener(ParseTreeListener):
 
     # Exit a parse tree produced by compiladoresParser#init.
     def exitInit(self, ctx:compiladoresParser.InitContext):
-        pass
+        name = str(ctx.getChild(0))
+        
+        if name in self.ids:
+            print(f'ERROR: la variable {name} ya ha sido creada')
+            return
+        
+        id = Variable(name, None)
+        
+        self.ids[name] = id
+        
 
 
     # Enter a parse tree produced by compiladoresParser#asignacion.
     def enterAsignacion(self, ctx:compiladoresParser.AsignacionContext):
         pass
 
-    # Exit a parse tree produced by compiladoresParser#asignacion.
+    # asignacion de UNICAMENTE variables a variables, operaciones, valores
     def exitAsignacion(self, ctx:compiladoresParser.AsignacionContext):
-        pass
+        # hijo 0 -> la variable 
+        # hijo 1 -> la asignacion ( el = )
+        # hijo 2 -> lo asignado ( numero, otra variable, funcion )
+        
+        key = str(ctx.getChild(0))
+                
+        if self.tablaSimbolos.findByKey(key):
+            pass
+        else:
+            print(f'la variable {key} no existe')
 
+    def enterAsignarFuncion(self, ctx:compiladoresParser.TdatoContext):
+        pass
+    
+    # asignacion de UNICAMENTE variables a funciones
+    def exitAsignarFuncion(self, ctx:compiladoresParser.TdatoContext):
+        key = str(ctx.getChild(2).getText())
+        
+        if not self.tablaSimbolos.findByKey(key):
+            print(f'la funcion {key} no existe')
+            
 
     # Enter a parse tree produced by compiladoresParser#tdato.
     def enterTdato(self, ctx:compiladoresParser.TdatoContext):
@@ -276,7 +353,6 @@ class compiladoresListener(ParseTreeListener):
     # Exit a parse tree produced by compiladoresParser#cmp.
     def exitCmp(self, ctx:compiladoresParser.CmpContext):
         pass
-
 
 
 del compiladoresParser

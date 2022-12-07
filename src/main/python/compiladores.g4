@@ -61,7 +61,8 @@ instruccion:
 	| bloquefor
 	| prototipado PYC
 	| funcion
-	| llamadaFuncion PYC;
+	| llamadaFuncion PYC
+	| asignarFuncion PYC;
 
 bloque:
 	LLA instrucciones LLC
@@ -115,10 +116,9 @@ conDeclaracion:
 
 init: ID ASSIG NUMERO | ID ASSIG itop | ID ASSIG llamadaFuncion;
 
-asignacion:
-	ID ASSIG NUMERO
-	| ID ASSIG itop
-	| ID ASSIG llamadaFuncion;
+asignacion: ID ASSIG NUMERO | ID ASSIG itop;
+
+asignarFuncion: ID ASSIG llamadaFuncion;
 
 tdato: INT | FLOAT;
 

@@ -3,9 +3,11 @@ int suma(int a, int b);
 float resta(int a, int b);
 
 int main(){
+  
 
   float a, b = 15651.516;
   int c = 0, d = 8;
+  float g,f,s,z;
   int e = c + d;
 
   if (e == 8 && e == 2){

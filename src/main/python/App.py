@@ -12,7 +12,7 @@ def main(argv):
     lexer = compiladoresLexer(input)
     stream = CommonTokenStream(lexer)
     parser = compiladoresParser(stream)
-    miListener = MiListener()
+    miListener = compiladoresListener()
     parser.addParseListener(miListener)
     tree = parser.programa()
     #tree = parser.prog()

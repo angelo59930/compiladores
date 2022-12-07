@@ -104,6 +104,11 @@ class compiladoresVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by compiladoresParser#asignarFuncion.
+    def visitAsignarFuncion(self, ctx:compiladoresParser.AsignarFuncionContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by compiladoresParser#tdato.
     def visitTdato(self, ctx:compiladoresParser.TdatoContext):
         return self.visitChildren(ctx)
