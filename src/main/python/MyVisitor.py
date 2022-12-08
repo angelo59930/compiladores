@@ -1,5 +1,7 @@
 # Generated from /home/kyanesdev/Facultad/DHS/compiladores/src/main/python/compiladores.g4 by ANTLR 4.9.2
 from antlr4 import *
+
+
 if __name__ is not None and "." in __name__:
     from .compiladoresParser import compiladoresParser
 else:
@@ -7,11 +9,22 @@ else:
 
 # This class defines a complete generic visitor for a parse tree produced by compiladoresParser.
 
-class compiladoresVisitor(ParseTreeVisitor):
+class MyVisitor(ParseTreeVisitor):
+    cont = 0
+    functions = dict()
+    lastLabel = [0]
+    currentLoop = [0]
+    tmp = 0
+    rollback = False
 
     # Visit a parse tree produced by compiladoresParser#programa.
     def visitPrograma(self, ctx:compiladoresParser.ProgramaContext):
-        return self.visitChildren(ctx)
+        self.f = open("./output/CodigoIntermedio.txt", "w")
+        self.f.write("push EOF\n")
+        self.f.write("jump main \n")
+        
+        self.visitChildren(ctx)
+        self.f.close()
 
 
     # Visit a parse tree produced by compiladoresParser#instrucciones.
@@ -66,7 +79,17 @@ class compiladoresVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#bloquefor.
     def visitBloquefor(self, ctx:compiladoresParser.BloqueforContext):
-        return self.visitChildren(ctx)
+        self.cont = self.cont + 1
+        self.currentLoop.append(self.cont)
+
+        self.f.write(ctx.getChild(2).getChild(1).getText() + "\n")
+        self.f.write("label loop" + str(self.currentLoop[-1]) + "\n")
+        self.visitChildren(ctx.getChild(7))
+
+        self.f.write(ctx.getChild(5).getText() + "\n")
+        self.f.write("ifnot " + ctx.getChild(3).getText() + " jump loop" + str(self.currentLoop[-1]) + "\n")
+        self.currentLoop.pop()
+        
 
 
     # Visit a parse tree produced by compiladoresParser#bloquewhile.
@@ -76,12 +99,24 @@ class compiladoresVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#bloqueif.
     def visitBloqueif(self, ctx:compiladoresParser.BloqueifContext):
-        return self.visitChildren(ctx)
+        self.cont = self.cont + 1
+        
+        self.f.write("ifnot " + ctx.getChild(2).getText() + " jump else" + str(self.cont) + "\n")
+        self.visitChildren(ctx.getChild(4))
+        self.f.write("jump endif" + str(self.lastLabel[-1]) + "\n")
+        self.f.write("label else" + str(self.lastLabel[-1]) + "\n")
+
+        if(ctx.getChild(5)):
+            self.visitChildren(ctx.getChild(5))
+
+        self.f.write("label endif" + str(self.lastLabel[-1]) + "\n")
+        self.lastLabel.pop()
 
 
     # Visit a parse tree produced by compiladoresParser#bloqueElse.
     def visitBloqueElse(self, ctx:compiladoresParser.BloqueElseContext):
-        return self.visitChildren(ctx)
+        self.visitChildren(ctx)
+        self.f.write("label endif" + str(self.lastLabel[-1]) + "\n")
 
 
     # Visit a parse tree produced by compiladoresParser#declaracion.
@@ -96,12 +131,17 @@ class compiladoresVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#init.
     def visitInit(self, ctx:compiladoresParser.InitContext):
-        return self.visitChildren(ctx)
+        self.visitChildren(ctx)
+        self.f.write(ctx.getChild(0).getText() + ctx.getChild(1).getText() + "t" + str(self.tmp) +  "\n")
+        self.rollback = False
+        self.tmp = 0
 
 
     # Visit a parse tree produced by compiladoresParser#asignacion.
     def visitAsignacion(self, ctx:compiladoresParser.AsignacionContext):
-        return self.visitChildren(ctx)
+        self.visitChildren(ctx)
+        self.f.write(str(ctx.getChild(0)) + "= t" + str(self.tmp) + "\n")
+        self.tmp = 0
 
 
     # Visit a parse tree produced by compiladoresParser#asignarFuncion.
@@ -126,6 +166,11 @@ class compiladoresVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#exp.
     def visitExp(self, ctx:compiladoresParser.ExpContext):
+        self.visitChildren(ctx)
+        if(ctx.getChildCount()):
+            self.f.write("t" + str(self.tmp) + "=" + ctx.getChild(0).getText() + "\n")
+        self.rollback = True
+        self.tmp = 0
         return self.visitChildren(ctx)
 
 
@@ -136,7 +181,15 @@ class compiladoresVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#t.
     def visitT(self, ctx:compiladoresParser.TContext):
-        return self.visitChildren(ctx)
+        self.visitChildren(ctx)
+        if(ctx.getChildCount() and not self.rollback):
+            self.f.write("t" + str(self.tmp) + "=" + ctx.getChild(1).getText() + "\n")
+            self.tmp = self.tmp + 1
+        if(self.rollback):
+            if(ctx.getChildCount()):
+                self.f.write("t" + str(self.tmp + 1) + "=" + "t" + str(self.tmp + 1))
+                self.f.write(ctx.getChild(0).getText() + "t" + str(self.tmp) + "\n")
+                self.tmp = self.tmp + 1     
 
 
     # Visit a parse tree produced by compiladoresParser#factor.
