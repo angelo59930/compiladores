@@ -44,7 +44,11 @@ class MyVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#retorno.
     def visitRetorno(self, ctx:compiladoresParser.RetornoContext):
-        return self.visitChildren(ctx)
+        self.f.write("pop return" + str(self.cont)  + "\n")
+        self.f.write("push " + ctx.getChild(1).getChild(0).getText() + "\n")
+        
+        self.f.write("jump return" + str(self.cont) + "\n")
+        self.cont = self.cont - 1
 
 
     # Visit a parse tree produced by compiladoresParser#prototipado.
@@ -59,6 +63,7 @@ class MyVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#argumento.
     def visitArgumento(self, ctx:compiladoresParser.ArgumentoContext):
+        self.f.write("pop " + str(ctx.getChild(1)) + "\n")
         return self.visitChildren(ctx)
 
 
@@ -69,6 +74,7 @@ class MyVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#parametros.
     def visitParametros(self, ctx:compiladoresParser.ParametrosContext):
+        self.f.write("push " + str(ctx.getChild(0))+ "\n")
         return self.visitChildren(ctx)
 
 
@@ -146,7 +152,13 @@ class MyVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#asignarFuncion.
     def visitAsignarFuncion(self, ctx:compiladoresParser.AsignarFuncionContext):
-        return self.visitChildren(ctx)
+        self.f.write("push PC\n")
+        self.visitChildren(ctx)
+        if(self.lastLabel):
+            self.lastLabel.pop()
+        
+        self.f.write("jump " + str(ctx.getChild(2))+ "\n")
+        self.f.write("pop " + str(ctx.getChild(0))+ "\n")
 
 
     # Visit a parse tree produced by compiladoresParser#tdato.
