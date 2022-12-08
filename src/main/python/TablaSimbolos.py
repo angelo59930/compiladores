@@ -29,11 +29,20 @@ class TablaSimbolos:
     # la key 'a' esta en el la pos 1 ( ts[1] ) 
     # la funcion nos deberia retornar True 
     def findByKey(self,key):
+        #print(f'TS -> {self.ts}')
+        #print(f'TS -> key:{key}')
         for context in self.ts:
             if key in context:
                 return True
         return False
     
+    # Devolver la ID en base a una Key
+    def returnKey(self,key):
+        for context in self.ts:
+            if key in context:
+                return context[key]
+        return False
+
 
 class Id:
     
@@ -48,7 +57,7 @@ class Id:
         self.varFunc = "variable" 
         
     def toString(self):
-        return f'({self.name},{self.type},{self.initialized},{self.used},{self.varFunc})'
+        return f'(name->{self.name},type->{self.type},init->{self.initialized},used->{self.used},varFun->{self.varFunc})'
     
 
 
@@ -60,7 +69,7 @@ class Function(Id):
     # Una fucion debe recibir un nombre, tipo y parametros
     # name -> nombre de la funcion
     # type -> tipo de funcion
-    # parameter -> ARREGLO de parametros de la funcion
+    # parameter -> ARREGLO con VARIABLES que acepta la funcion
     def __init__(self, name, type, parameters):
         super().__init__(name, type)
         self.parameters = parameters
