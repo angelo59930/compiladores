@@ -29,6 +29,8 @@ class TablaSimbolos:
     # la key 'a' esta en el la pos 1 ( ts[1] ) 
     # la funcion nos deberia retornar True 
     def findByKey(self,key):
+        print(f'TS -> key:{key}')
+        print(f'TS -> {self.ts}')
         for context in self.ts:
             if key in context:
                 return True

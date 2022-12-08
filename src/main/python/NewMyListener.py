@@ -188,10 +188,12 @@ class compiladoresListener(ParseTreeListener):
         
         for id in self.ids:
             value = self.ids[id]
-            print(f'DATATYPE -> {value.type}')
         
-        self.tablaSimbolos.ts[-1] = self.ids.copy()
+        for id in self.ids:
+            self.tablaSimbolos.ts[-1][id] = self.ids[id]
         
+        
+        print(f'TS IN DECLARACION -> {self.tablaSimbolos.ts}')
         self.ids.clear()
         
         
@@ -239,7 +241,7 @@ class compiladoresListener(ParseTreeListener):
         # hijo 2 -> lo asignado ( numero, otra variable, funcion )
         
         key = str(ctx.getChild(0))
-                
+                      
         if self.tablaSimbolos.findByKey(key):
             pass
         else:
@@ -251,7 +253,6 @@ class compiladoresListener(ParseTreeListener):
     # asignacion de UNICAMENTE variables a funciones
     def exitAsignarFuncion(self, ctx:compiladoresParser.TdatoContext):
         key = str(ctx.getChild(2).getText())
-        
         if not self.tablaSimbolos.findByKey(key):
             print(f'la funcion {key} no existe')
             
