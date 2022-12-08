@@ -17,6 +17,7 @@ class compiladoresListener(ParseTreeListener):
     contador = 0;
     tablaSimbolos = TablaSimbolos()
     ids = dict()
+    parametros = []
     
     
     
@@ -47,12 +48,12 @@ class compiladoresListener(ParseTreeListener):
     # se sale de un bloque cuando encontramos -> '}'
     def exitBloque(self, ctx:compiladoresParser.BloqueContext):
         #print(self.tablaSimbolos.ts.__str__())
-        print('Contexto ' + str(self.contador) + ':{')
-        for context in self.tablaSimbolos.ts:
-            for elements in context:
-                print(f'{elements}:{context[elements].toString()},')
-                
-        print('}')
+        #print('Contexto ' + str(self.contador) + ':{')
+        #for context in self.tablaSimbolos.ts:
+        #    for elements in context:
+        #        print(f'{elements}:{context[elements].toString()},')
+        #        
+        #print('}')
         self.tablaSimbolos.removeContex()
 
 
@@ -62,7 +63,13 @@ class compiladoresListener(ParseTreeListener):
 
     # Exit a parse tree produced by compiladoresParser#prototipado.
     def exitPrototipado(self, ctx:compiladoresParser.PrototipadoContext):
-        pass
+        
+        tipo = str(ctx.getChild(0).getChild(0))
+        nombre = str(ctx.getChild(1))
+        funcion = Function(nombre, tipo, self.parametros)
+        self.tablaSimbolos.ts[0][nombre] = funcion
+        self.parametros.clear()
+        
 
     # Exit a parse tree produced by compiladoresParser#argumentos.
     def exitArgumentos(self, ctx:compiladoresParser.ArgumentosContext):
@@ -70,7 +77,10 @@ class compiladoresListener(ParseTreeListener):
 
     # Exit a parse tree produced by compiladoresParser#argumento.
     def exitArgumento(self, ctx:compiladoresParser.ArgumentoContext):
-        pass
+
+        var = Variable(ctx.getChild(1), ctx.getChild(0).getChild(0))
+        self.parametros.append(var)        
+        
 
     # Exit a parse tree produced by compiladoresParser#funcion.
     def exitFuncion(self, ctx:compiladoresParser.FuncionContext):
@@ -82,7 +92,10 @@ class compiladoresListener(ParseTreeListener):
 
     # Exit a parse tree produced by compiladoresParser#llamadaFuncion.
     def exitLlamadaFuncion(self, ctx:compiladoresParser.LlamadaFuncionContext):
-        pass
+        key = str(ctx.getChild(0))
+        print(f'TS -> {self.tablaSimbolos.ts}')
+        if not self.tablaSimbolos.findByKey(key):
+            print(f'ERROR: La funcion "{key}" no existe')
 
     # Exit a parse tree produced by compiladoresParser#bloquefor.
     def exitBloquefor(self, ctx:compiladoresParser.BloqueforContext):
@@ -149,7 +162,7 @@ class compiladoresListener(ParseTreeListener):
         name = str(ctx.getChild(0))
         
         if name in self.ids:
-            print(f'ERROR: la variable {name} ya ha sido creada')
+            print(f'ERROR: La variable {name} ya ha sido creada')
             return
         
         id = Variable(name, None)
@@ -170,21 +183,15 @@ class compiladoresListener(ParseTreeListener):
         else:
             print(f'la variable {key} no existe')
 
-    def enterAsignarFuncion(self, ctx:compiladoresParser.TdatoContext):
-        pass
     
     # asignacion de UNICAMENTE variables a funciones
     def exitAsignarFuncion(self, ctx:compiladoresParser.TdatoContext):
-        keyFunc = str(ctx.getChild(2).getText())
         keyVar = str(ctx.getChild(0))
         
         if self.tablaSimbolos.findByKey(keyVar):
             self.tablaSimbolos.returnKey(keyVar).initialized = True    
         else:
-            print(f'ERROR: la variable "{keyVar}" no existe')
-        
-        if not self.tablaSimbolos.findByKey(keyFunc):
-            print(f'EEROR: la funcion "{keyFunc}" no existe')
+            print(f'ERROR: La variable "{keyVar}" no existe')
             
 
     # Exit a parse tree produced by compiladoresParser#tdato.
