@@ -14,24 +14,13 @@ class compiladoresListener(ParseTreeListener):
     ids = dict()
     parametros = []
     
-    
-    
-    # abrimos el archivo para escribir los contextos
+    # TODO: abrimos el archivo para escribir los contextos
     def enterPrograma(self, ctx:compiladoresParser.ProgramaContext):
         pass
 
-    # escribinos y por ultimo cerramos el archivos
+    # TODO: escribinos y por ultimo cerramos el archivos
     def exitPrograma(self, ctx:compiladoresParser.ProgramaContext):
         pass
-
-    # Enter a parse tree produced by compiladoresParser#instruccion.
-    def enterInstruccion(self, ctx:compiladoresParser.InstruccionContext):
-        pass
-
-    # Exit a parse tree produced by compiladoresParser#instruccion.
-    def exitInstruccion(self, ctx:compiladoresParser.InstruccionContext):
-        pass
-
 
     # cuando entramos en un bloque AÑADIMOS un contexto
     # se entra en un bloque cuando encontramos -> '{'
@@ -52,11 +41,11 @@ class compiladoresListener(ParseTreeListener):
         
         self.tablaSimbolos.removeContex()
 
-
     
     def exitRetorno(self, ctx:compiladoresParser.RetornoContext):
         # Verificamos que el valor retornado sea un numero o una variable
         tmp = str(ctx.getChild(1))
+        
         try:
             # Probamos si la cadena de texto se puede parsear a un numero
             if tmp.isdigit() or float(tmp):
@@ -65,14 +54,7 @@ class compiladoresListener(ParseTreeListener):
             pass
         
         # Como no es un numero verificamos su existencia en la tabla de simbolos
-        if self.tablaSimbolos.findByKey(tmp):
-            var = self.tablaSimbolos.returnKey(tmp)
-            if var.initialized:
-                var.used = True
-            else:
-                print(f'WARNING: La variable "{tmp}" no fue inicializada')
-        else:
-            print(f'ERROR: La variable "{tmp}" no existe')
+        self.compInTs(tmp)
         
         
     def exitPrototipado(self, ctx:compiladoresParser.PrototipadoContext):
@@ -110,7 +92,6 @@ class compiladoresListener(ParseTreeListener):
         var.initialized = True 
         self.tablaSimbolos.ts[-1][str(var.name)] = var
       
-
 
     def exitArgumentoProto(self, ctx:compiladoresParser.ArgumentoContext):
         var = Variable(ctx.getChild(1), ctx.getChild(0).getChild(0))   
@@ -246,107 +227,72 @@ class compiladoresListener(ParseTreeListener):
             print(f'ERROR: La variable "{keyVar}" no existe')
             
 
-    # Exit a parse tree produced by compiladoresParser#tdato.
-    def exitTdato(self, ctx:compiladoresParser.TdatoContext):
-        pass
-
-    # Exit a parse tree produced by compiladoresParser#itop.
-    def exitItop(self, ctx:compiladoresParser.ItopContext):
-        pass
-
-
-    # Enter a parse tree produced by compiladoresParser#oparit.
-    def enterOparit(self, ctx:compiladoresParser.OparitContext):
-        pass
-
-    # Exit a parse tree produced by compiladoresParser#oparit.
-    def exitOparit(self, ctx:compiladoresParser.OparitContext):
-        pass
-
-
-    # Enter a parse tree produced by compiladoresParser#exp.
-    def enterExp(self, ctx:compiladoresParser.ExpContext):
-        pass
-
-    # Exit a parse tree produced by compiladoresParser#exp.
-    def exitExp(self, ctx:compiladoresParser.ExpContext):
-        pass
-
-
-    # Enter a parse tree produced by compiladoresParser#term.
-    def enterTerm(self, ctx:compiladoresParser.TermContext):
-        pass
-
-    # Exit a parse tree produced by compiladoresParser#term.
-    def exitTerm(self, ctx:compiladoresParser.TermContext):
-        pass
-
-
-    # Enter a parse tree produced by compiladoresParser#t.
-    def enterT(self, ctx:compiladoresParser.TContext):
-        pass
-
-    # Exit a parse tree produced by compiladoresParser#t.
-    def exitT(self, ctx:compiladoresParser.TContext):
-        pass
-
-
-    # Enter a parse tree produced by compiladoresParser#factor.
-    def enterFactor(self, ctx:compiladoresParser.FactorContext):
-        pass
-
     # Exit a parse tree produced by compiladoresParser#factor.
     def exitFactor(self, ctx:compiladoresParser.FactorContext):
         tmp = str(ctx.getChild(0))
+        
         try:
             if tmp.isdigit() or float(tmp):
                 return
         except:
             pass
         
-        if self.tablaSimbolos.findByKey(tmp):
-            var = self.tablaSimbolos.returnKey(tmp)
-            if var.initialized:
-                var.used = True
-            else:
-                print(f'WARNING: La variable "{tmp}" no fue inicializada')
-        else:
-            print(f'ERROR: La variable "{tmp}" no existe')
-
-    # Enter a parse tree produced by compiladoresParser#f.
-    def enterF(self, ctx:compiladoresParser.FContext):
-        pass
-
-    # Exit a parse tree produced by compiladoresParser#f.
-    def exitF(self, ctx:compiladoresParser.FContext):
-        pass
+        # Llamamos a la funcion para que compruebe:
+        # - si esta en la tabla de simbolos
+        # - si fue inicializada (para tirar el warning)
+        self.compInTs(tmp)
+        
 
 
-    # Enter a parse tree produced by compiladoresParser#control.
-    def enterControl(self, ctx:compiladoresParser.ControlContext):
-        pass
-
-    # Exit a parse tree produced by compiladoresParser#control.
-    def exitControl(self, ctx:compiladoresParser.ControlContext):
-        pass
-
-
-    # Enter a parse tree produced by compiladoresParser#cmps.
-    def enterCmps(self, ctx:compiladoresParser.CmpsContext):
-        pass
-
-    # Exit a parse tree produced by compiladoresParser#cmps.
-    def exitCmps(self, ctx:compiladoresParser.CmpsContext):
-        pass
-
-
-    # Enter a parse tree produced by compiladoresParser#cmp.
-    def enterCmp(self, ctx:compiladoresParser.CmpContext):
-        pass
+    #TODO:ver el tema del incrementoUnario
 
     # Exit a parse tree produced by compiladoresParser#cmp.
     def exitCmp(self, ctx:compiladoresParser.CmpContext):
-        pass
-
+        op1 = str(ctx.getChild(0))
+        op2 = str(ctx.getChild(2))
+        
+        try:
+            if op1.isdigit() or float(op1):
+                op1 = False
+        except:
+            pass
+           
+        try:
+            if op2.isdigit() or float(op2):
+                op2 = False
+        except:
+            pass
+        
+        if op1 != False:
+            # Verificamos si el op1 esta en la tabla de simbolo
+            # Si se encuentra en la tabla de simbolo hacemos:
+            # 1- Si no esta inicializada damos el WARNING
+            # 2- Si no esta usada le cambiamos el parametro "used" a True
+            self.compInTs(op1)           
+        
+        if op2 != False:
+            # Hacemos lo mismo que en el op1 para el op2
+            self.compInTs(op2)    
+            
+    
+    # Esta funcion lo que hace es recibir el nombre de un ID
+    # y procede a:
+    # 1- Buscarlo en la Tabla de simbolos
+    #       · Si lo encuentra entonces avanza a 2
+    #       · Si NO lo encuentra lanza el ERROR
+    # 2- Marcamos la variable como usada
+    # 3- Verificamos si fue inicializada la variable
+    #       · Si no fue inicializada lanzamos el WARNING
+    #       · Si fue inicializada no hacemos nada 
+    def compInTs(self, tmp):
+        if self.tablaSimbolos.findByKey(tmp):
+            var = self.tablaSimbolos.returnKey(tmp)
+            var.used = True
+            if not var.initialized:
+                print(f'WARNING: La variable "{tmp}" no fue inicializada')
+        else:
+            print(f'ERROR: La variable "{tmp}" no existe')
+    
+            
 
 del compiladoresParser

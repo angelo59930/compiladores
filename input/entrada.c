@@ -1,19 +1,18 @@
-int suma(int a,int b);
-
 int main(int arg, int argv)
 {
 
-  int a = 0, b = 1,dado;
-  int c;
-  float d = suma(a,b);
+  int a = 0 + 5, b = 1,dado;
+  
+  while(dado > 2){
+    float b = 1;
+    dado++;
+  }
 
-  c = suma(a, b);
+  for(int i = 0; i < 10; i++){}
+
+  if(1 > 20){}
+
+  if (a > b){  }
 
   return 0;
-}
-
-int suma(int a,int b){
-  int peeeee;
-  peeeee = a + b;
-  return peeeee;
 }

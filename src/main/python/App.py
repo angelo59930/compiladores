@@ -17,7 +17,7 @@ def main(argv):
     miVisitor = MyVisitor()
     parser.addParseListener(miListener)
     tree = parser.programa()
-    miVisitor.visitPrograma(tree)
+    #miVisitor.visitPrograma(tree)
     #tree = parser.prog()
 
 if __name__ == '__main__':

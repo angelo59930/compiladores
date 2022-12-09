@@ -72,7 +72,10 @@ retorno: RETORNO | RETORNO ID | RETORNO NUMERO | RETORNO oparit;
 
 prototipado: tdato ID PA (argumentosProto |) PC;
 
-argumentosProto: argumentoProto | argumentoProto COMA argumentosProto |;
+argumentosProto:
+	argumentoProto
+	| argumentoProto COMA argumentosProto
+	|;
 
 argumentos: argumento | argumento COMA argumentos |;
 
@@ -94,13 +97,29 @@ parametros:
 llamadaFuncion: ID PA (parametros |) PC | ID PA PC;
 
 bloquefor:
-	FOR PA (declaracion | asignacion) PYC cmp PYC asignacion PC bloque
+	FOR PA (declaracion | asignacion) PYC cmp PYC (
+		asignacion
+		| incrementoUnario
+		| decrementoUnario
+	) PC bloque
 	| FOR PA PYC PYC PYC PC
-	| FOR PA (declaracion | asignacion) PYC PYC asignacion PC bloque
+	| FOR PA (declaracion | asignacion) PYC PYC (
+		asignacion
+		| incrementoUnario
+		| decrementoUnario
+	) PC bloque
 	| FOR PA (declaracion | asignacion) PYC cmp PYC PC bloque
 	| FOR PA (declaracion | asignacion) PYC PYC PC bloque
-	| FOR PA PYC cmp PYC asignacion PC bloque
-	| FOR PA PYC PYC asignacion PC bloque;
+	| FOR PA PYC cmp PYC (
+		asignacion
+		| incrementoUnario
+		| decrementoUnario
+	) PC bloque
+	| FOR PA PYC PYC (
+		asignacion
+		| incrementoUnario
+		| decrementoUnario
+	) PC bloque;
 
 bloquewhile: WHILE control bloque;
 
@@ -158,7 +177,11 @@ cmp:
 	| NUMERO MAYOR ID
 	| NUMERO MENOR ID
 	| NUMERO IGUALDAD ID
-	| NUMERO DISTINTO ID;
+	| NUMERO DISTINTO ID
+	| NUMERO MAYOR NUMERO
+	| NUMERO MENOR NUMERO
+	| NUMERO IGUALDAD NUMERO
+	| NUMERO DISTINTO NUMERO;
 
 incrementoUnario: ID INCREMENTO;
 

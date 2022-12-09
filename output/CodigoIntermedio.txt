@@ -4,23 +4,9 @@ pop arg
 pop argv
 a=t0
 b=t0
-push a
-push b
-d=t0
-push PC
-push a
-push b
-jump suma
-pop c
-pop return0
-push return
-jump return0
-pop a
-pop b
-t0=b
-t1=a
-t1=t1+t0
-peeeee= t1
-pop return-1
-push return
-jump return-1
+b=t0
+i=0
+label loop1
+;
+ifnot ; jump loop1
+ifnot {} jump else2
