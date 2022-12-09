@@ -243,9 +243,6 @@ class compiladoresListener(ParseTreeListener):
         self.compInTs(tmp)
         
 
-
-    #TODO:ver el tema del incrementoUnario
-
     # Exit a parse tree produced by compiladoresParser#cmp.
     def exitCmp(self, ctx:compiladoresParser.CmpContext):
         op1 = str(ctx.getChild(0))
@@ -273,7 +270,14 @@ class compiladoresListener(ParseTreeListener):
         if op2 != False:
             # Hacemos lo mismo que en el op1 para el op2
             self.compInTs(op2)    
-            
+    
+    
+    def exitIncrementoUnario(self, ctx:compiladoresParser.IncrementoUnarioContext):
+        self.compInTs(str(ctx.getChild(0)))
+    
+    def exitDecrementoUnario(self, ctx:compiladoresParser.DecrementoUnarioContext):
+        self.compInTs(str(ctx.getChild(0)))
+
     
     # Esta funcion lo que hace es recibir el nombre de un ID
     # y procede a:

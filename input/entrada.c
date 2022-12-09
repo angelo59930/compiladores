@@ -1,11 +1,12 @@
 int main(int arg, int argv)
 {
 
-  int a = 0 + 5, b = 1,dado;
+  int a = 0 + 5, b = 1,dado, j;
   
   while(dado > 2){
     float b = 1;
-    dado++;
+    j++;
+    j--;
   }
 
   for(int i = 0; i < 10; i++){}
