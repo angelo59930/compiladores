@@ -1,4 +1,4 @@
-# Generated from /home/kyanesdev/Facultad/DHS/compiladores/src/main/python/compiladores.g4 by ANTLR 4.9.2
+# Generated from /home/angelo/Facultad/Tercero/DHS/compiladores/src/main/python/compiladores.g4 by ANTLR 4.9.2
 from antlr4 import *
 if __name__ is not None and "." in __name__:
     from .compiladoresParser import compiladoresParser
@@ -39,6 +39,11 @@ class compiladoresVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by compiladoresParser#argumentosProto.
+    def visitArgumentosProto(self, ctx:compiladoresParser.ArgumentosProtoContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by compiladoresParser#argumentos.
     def visitArgumentos(self, ctx:compiladoresParser.ArgumentosContext):
         return self.visitChildren(ctx)
@@ -49,8 +54,18 @@ class compiladoresVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by compiladoresParser#argumentoProto.
+    def visitArgumentoProto(self, ctx:compiladoresParser.ArgumentoProtoContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by compiladoresParser#funcion.
     def visitFuncion(self, ctx:compiladoresParser.FuncionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by compiladoresParser#cabezera.
+    def visitCabezera(self, ctx:compiladoresParser.CabezeraContext):
         return self.visitChildren(ctx)
 
 

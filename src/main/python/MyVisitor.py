@@ -45,7 +45,7 @@ class MyVisitor(ParseTreeVisitor):
     # Visit a parse tree produced by compiladoresParser#retorno.
     def visitRetorno(self, ctx:compiladoresParser.RetornoContext):
         self.f.write("pop return" + str(self.cont)  + "\n")
-        self.f.write("push " + ctx.getChild(1).getChild(0).getText() + "\n")
+        self.f.write("push " + ctx.getChild(0).getText() + "\n")
         
         self.f.write("jump return" + str(self.cont) + "\n")
         self.cont = self.cont - 1
@@ -157,7 +157,7 @@ class MyVisitor(ParseTreeVisitor):
         if(self.lastLabel):
             self.lastLabel.pop()
         
-        self.f.write("jump " + str(ctx.getChild(2))+ "\n")
+        self.f.write("jump " + str(ctx.getChild(2).getChild(0))+ "\n")
         self.f.write("pop " + str(ctx.getChild(0))+ "\n")
 
 

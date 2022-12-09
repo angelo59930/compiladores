@@ -1,4 +1,4 @@
-# Generated from /home/kyanesdev/Facultad/DHS/compiladores/src/main/python/compiladores.g4 by ANTLR 4.9.2
+# Generated from /home/angelo/Facultad/Tercero/DHS/compiladores/src/main/python/compiladores.g4 by ANTLR 4.9.2
 from antlr4 import *
 if __name__ is not None and "." in __name__:
     from .compiladoresParser import compiladoresParser
@@ -62,6 +62,15 @@ class compiladoresListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by compiladoresParser#argumentosProto.
+    def enterArgumentosProto(self, ctx:compiladoresParser.ArgumentosProtoContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#argumentosProto.
+    def exitArgumentosProto(self, ctx:compiladoresParser.ArgumentosProtoContext):
+        pass
+
+
     # Enter a parse tree produced by compiladoresParser#argumentos.
     def enterArgumentos(self, ctx:compiladoresParser.ArgumentosContext):
         pass
@@ -80,12 +89,30 @@ class compiladoresListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by compiladoresParser#argumentoProto.
+    def enterArgumentoProto(self, ctx:compiladoresParser.ArgumentoProtoContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#argumentoProto.
+    def exitArgumentoProto(self, ctx:compiladoresParser.ArgumentoProtoContext):
+        pass
+
+
     # Enter a parse tree produced by compiladoresParser#funcion.
     def enterFuncion(self, ctx:compiladoresParser.FuncionContext):
         pass
 
     # Exit a parse tree produced by compiladoresParser#funcion.
     def exitFuncion(self, ctx:compiladoresParser.FuncionContext):
+        pass
+
+
+    # Enter a parse tree produced by compiladoresParser#cabezera.
+    def enterCabezera(self, ctx:compiladoresParser.CabezeraContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#cabezera.
+    def exitCabezera(self, ctx:compiladoresParser.CabezeraContext):
         pass
 
 

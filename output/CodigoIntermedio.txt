@@ -1,10 +1,26 @@
 push EOF
 jump main 
+pop arg
+pop argv
+a=t0
 b=t0
-c=t0
+push a
+push b
 d=t0
-t0=d
-t1=c
+push PC
+push a
+push b
+jump suma
+pop c
+pop return0
+push return
+jump return0
+pop a
+pop b
+t0=b
+t1=a
 t1=t1+t0
-e=t1
-ifnot {a=1;} jump else1
+peeeee= t1
+pop return-1
+push return
+jump return-1

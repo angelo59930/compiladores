@@ -8,11 +8,6 @@ if __name__ is not None and "." in __name__:
 else:
     from compiladoresParser import compiladoresParser
 
-# TODO: 
-# En el contexto GLOBAL se pueden guardar las referencias a las FUNCIONES
-# esto nos sirve para identificar si existe la funion 'main', las variables y los prototipos
-# a su vez con esto podriamos saber si un prototipo esta implementado o no
-# o si una funcion despues del main se encuentra declarada y no prototipada
 class compiladoresListener(ParseTreeListener):
     contador = 0;
     tablaSimbolos = TablaSimbolos()
@@ -47,71 +42,113 @@ class compiladoresListener(ParseTreeListener):
     # cuando salimos de un bloque REMOVEMOS un contexto
     # se sale de un bloque cuando encontramos -> '}'
     def exitBloque(self, ctx:compiladoresParser.BloqueContext):
-        #print(self.tablaSimbolos.ts.__str__())
         #print('Contexto ' + str(self.contador) + ':{')
         #for context in self.tablaSimbolos.ts:
         #    for elements in context:
         #        print(f'{elements}:{context[elements].toString()},')
         #        
         #print('}')
+        print("CTX-BLOQUE -> " +self.tablaSimbolos.ts.__str__())
+        
         self.tablaSimbolos.removeContex()
 
 
     # Exit a parse tree produced by compiladoresParser#retorno.
     def exitRetorno(self, ctx:compiladoresParser.RetornoContext):
         pass
-
+        
+        
     # Exit a parse tree produced by compiladoresParser#prototipado.
     def exitPrototipado(self, ctx:compiladoresParser.PrototipadoContext):
-        
         tipo = str(ctx.getChild(0).getChild(0))
         nombre = str(ctx.getChild(1))
-        funcion = Function(nombre, tipo, self.parametros)
-        self.tablaSimbolos.ts[0][nombre] = funcion
+        funcion = Function(nombre, tipo, self.parametros.copy())
+        self.tablaSimbolos.ts[-1][nombre] = funcion
         self.parametros.clear()
+    
+    def exitCabezera(self, ctx:compiladoresParser.CabezeraContext):
+        name = str(ctx.getChild(1))
+        # Si el nombre de la funcion es "main" omitimos las comprobaciones
+        if name == 'main':
+            # añadimos a la tabla de simbolos los posibles argumentos que pueda tener el main como arg y argv
+            for param in self.parametros:
+                param.initialized = True
+                self.tablaSimbolos.ts[-1][str(param.name)] = param
+            return
         
+        # Si no es la funcion "main"
+        # Verificamos que se encuentra en el contexto global el prototipo
+        if self.tablaSimbolos.findByKey(name) and self.tablaSimbolos.returnKey(name).varFunc == 'function':
+            # Si se encuentra la key
+            # Y si es una funcion  
+            # decimos que la funcion esta inicializada/creada
+            self.tablaSimbolos.returnKey(name).initialized = True
+            
+        else:
+            print(f'ERROR: La funcion "{name}" no se encuentra prototipada')
 
-    # Exit a parse tree produced by compiladoresParser#argumentos.
-    def exitArgumentos(self, ctx:compiladoresParser.ArgumentosContext):
-        pass
 
     # Exit a parse tree produced by compiladoresParser#argumento.
     def exitArgumento(self, ctx:compiladoresParser.ArgumentoContext):
-
         var = Variable(ctx.getChild(1), ctx.getChild(0).getChild(0))
-        self.parametros.append(var)        
-        
+        var.initialized = True 
+        self.tablaSimbolos.ts[-1][str(var.name)] = var
+      
 
+
+    def exitArgumentoProto(self, ctx:compiladoresParser.ArgumentoContext):
+        var = Variable(ctx.getChild(1), ctx.getChild(0).getChild(0))   
+        var.initialized = True     
+        self.parametros.append(var)     
+
+
+    def enterFuncion(self, ctx:compiladoresParser.FuncionContext):
+        # Aqui se crea un nuevo contexto
+        # Esto se debe a que necesitamos alguna forma para almacenar
+        # los argumentos de las funciones (en el caso de "main" tenemos: "arg" y "argv")
+        # Al crear un nuevo contexto sabemos que este siempre sera el anteUltimo
+        # por lo tanto siempre que busquemos un ID vamos a tener en cuenta los argumentos de la funcion
+        self.tablaSimbolos.addContex()
+        
     # Exit a parse tree produced by compiladoresParser#funcion.
     def exitFuncion(self, ctx:compiladoresParser.FuncionContext):
-        pass
+        # Sabemos que aqui acaban las funciones
+        # por ese motivo podemos borrar el contexto de argumenos de la funcion
+        # ----------------------------------------------------------------
+        # Para hacer esto hay que tener en cuenta varias cosas:
+        #     1- La funcion 'removeContex' solo borra el ULTIMO contexto
+        #     2- Cuando salimos de un bloque hacemos un removeContext        
+        # ----------------------------------------------------------------
+        # Sabiendo esto tenemos que tener en cuenta que si borramos un contexto aca
+        # SIEMPRE se borraran 2 contextos.
+        # Esto nos sirve debido a que por cada funcion generamos 2 contextos
+        # 1 contexto de argumentos
+        # 1 contexto del bloque
+        self.tablaSimbolos.removeContex()
+        print("CTX-RETORNO -> " +self.tablaSimbolos.ts.__str__())
+
 
     # Exit a parse tree produced by compiladoresParser#parametros.
     def exitParametros(self, ctx:compiladoresParser.ParametrosContext):
-        pass
-
+        tmp = ctx.getText()
+        tmp = tmp.split(',')
+        
+        if self.tablaSimbolos.findByKey(str(tmp[0])):
+            self.tablaSimbolos.returnKey(str(tmp[0])).used = True   
+              
+            if not self.tablaSimbolos.returnKey(str(tmp[0])).initialized:
+                print(f'WARNING: La variable "{str(tmp[0])}" no esta inicializada')
+                
+        else:
+            print(f'ERROR: La variable "{str(tmp[0])}" no existe')
+        
+        
     # Exit a parse tree produced by compiladoresParser#llamadaFuncion.
     def exitLlamadaFuncion(self, ctx:compiladoresParser.LlamadaFuncionContext):
         key = str(ctx.getChild(0))
-        print(f'TS -> {self.tablaSimbolos.ts}')
+        #print(f'TS -> {self.tablaSimbolos.ts}')
         if not self.tablaSimbolos.findByKey(key):
             print(f'ERROR: La funcion "{key}" no existe')
-
-    # Exit a parse tree produced by compiladoresParser#bloquefor.
-    def exitBloquefor(self, ctx:compiladoresParser.BloqueforContext):
-        pass
-
-    # Exit a parse tree produced by compiladoresParser#bloquewhile.
-    def exitBloquewhile(self, ctx:compiladoresParser.BloquewhileContext):
-        pass
-
-    # Exit a parse tree produced by compiladoresParser#bloqueif.
-    def exitBloqueif(self, ctx:compiladoresParser.BloqueifContext):
-        pass
-
-    # Exit a parse tree produced by compiladoresParser#bloqueElse.
-    def exitBloqueElse(self, ctx:compiladoresParser.BloqueElseContext):
-        pass
 
     def exitDeclaracion(self, ctx:compiladoresParser.DeclaracionContext):
         tipo = str(ctx.getChild(0).getChild(0)) # tipo de todas las variables
@@ -122,15 +159,15 @@ class compiladoresListener(ParseTreeListener):
         if tmp.startswith('int'):
             dataType = 'int'
             datosTmp = tmp[3:]
-            tmpData = datosTmp.split(',')[0]            
+            tmpData = datosTmp.split(',')[0]        
         else:
             dataType = 'float'
             datosTmp = tmp[5:]
             tmpData = datosTmp.split(',')[0]
         
         if not '=' in tmpData:
-            id = Variable(tmpData[0], dataType)
-            self.ids[tmpData[0]] = id
+            id = Variable(tmpData, dataType)
+            self.ids[tmpData] = id
 
         for id in self.ids:
             value = self.ids[id]
@@ -162,7 +199,7 @@ class compiladoresListener(ParseTreeListener):
         name = str(ctx.getChild(0))
         
         if name in self.ids:
-            print(f'ERROR: La variable {name} ya ha sido creada')
+            print(f'ERROR: La variable "{name}" ya ha sido creada')
             return
         
         id = Variable(name, None)
@@ -181,7 +218,7 @@ class compiladoresListener(ParseTreeListener):
             var = self.tablaSimbolos.returnKey(key)
             var.initialized = True
         else:
-            print(f'la variable {key} no existe')
+            print(f'ERROR: La variable "{key}" no existe')
 
     
     # asignacion de UNICAMENTE variables a funciones
@@ -257,9 +294,9 @@ class compiladoresListener(ParseTreeListener):
             if var.initialized:
                 var.used = True
             else:
-                print(f'WARNING: La variable {tmp} no fue inicializada')
+                print(f'WARNING: La variable "{tmp}" no fue inicializada')
         else:
-            print(f'ERROR: La variable {tmp} no existe')
+            print(f'ERROR: La variable "{tmp}" no existe')
 
     # Enter a parse tree produced by compiladoresParser#f.
     def enterF(self, ctx:compiladoresParser.FContext):

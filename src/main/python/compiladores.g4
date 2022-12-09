@@ -70,13 +70,19 @@ bloque:
 
 retorno: RETORNO | RETORNO ID | RETORNO NUMERO | RETORNO oparit;
 
-prototipado: tdato ID PA (argumentos |) PC;
+prototipado: tdato ID PA (argumentosProto |) PC;
+
+argumentosProto: argumentoProto | argumentoProto COMA argumentosProto |;
 
 argumentos: argumento | argumento COMA argumentos |;
 
 argumento: tdato ID;
 
-funcion: prototipado bloque;
+argumentoProto: tdato ID;
+
+funcion: cabezera bloque;
+
+cabezera: tdato ID PA (argumentos |) PC;
 
 parametros:
 	ID
