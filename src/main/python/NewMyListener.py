@@ -14,13 +14,11 @@ class compiladoresListener(ParseTreeListener):
     ids = dict()
     parametros = []
     
-    # TODO: abrimos el archivo para escribir los contextos
     def enterPrograma(self, ctx:compiladoresParser.ProgramaContext):
-        pass
+        self.f = open('./output/TablaDeSimbolos.txt','w')
 
-    # TODO: escribinos y por ultimo cerramos el archivos
     def exitPrograma(self, ctx:compiladoresParser.ProgramaContext):
-        pass
+        self.f.close()
 
     # cuando entramos en un bloque AÑADIMOS un contexto
     # se entra en un bloque cuando encontramos -> '{'
@@ -38,7 +36,7 @@ class compiladoresListener(ParseTreeListener):
         #        
         #print('}')
         #print("CTX-BLOQUE -> " +self.tablaSimbolos.ts.__str__())
-        
+        self.f.write(self.tablaSimbolos.ts.__str__() + "\n")
         self.tablaSimbolos.removeContex()
 
     

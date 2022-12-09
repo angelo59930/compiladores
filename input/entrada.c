@@ -1,3 +1,4 @@
+int suma(int a, int b);
 int main(int arg, int argv)
 {
 
@@ -13,7 +14,13 @@ int main(int arg, int argv)
 
   if(1 > 20){}
 
-  if (a > b){  }
+  if (a > b){  
+    a = suma(a,b);
+  }
 
   return 0;
+}
+
+int suma(int a, int b){
+  return a + b;
 }
