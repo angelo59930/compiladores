@@ -48,17 +48,33 @@ class compiladoresListener(ParseTreeListener):
         #        print(f'{elements}:{context[elements].toString()},')
         #        
         #print('}')
-        print("CTX-BLOQUE -> " +self.tablaSimbolos.ts.__str__())
+        #print("CTX-BLOQUE -> " +self.tablaSimbolos.ts.__str__())
         
         self.tablaSimbolos.removeContex()
 
 
-    # Exit a parse tree produced by compiladoresParser#retorno.
+    
     def exitRetorno(self, ctx:compiladoresParser.RetornoContext):
-        pass
+        # Verificamos que el valor retornado sea un numero o una variable
+        tmp = str(ctx.getChild(1))
+        try:
+            # Probamos si la cadena de texto se puede parsear a un numero
+            if tmp.isdigit() or float(tmp):
+                return
+        except:
+            pass
+        
+        # Como no es un numero verificamos su existencia en la tabla de simbolos
+        if self.tablaSimbolos.findByKey(tmp):
+            var = self.tablaSimbolos.returnKey(tmp)
+            if var.initialized:
+                var.used = True
+            else:
+                print(f'WARNING: La variable "{tmp}" no fue inicializada')
+        else:
+            print(f'ERROR: La variable "{tmp}" no existe')
         
         
-    # Exit a parse tree produced by compiladoresParser#prototipado.
     def exitPrototipado(self, ctx:compiladoresParser.PrototipadoContext):
         tipo = str(ctx.getChild(0).getChild(0))
         nombre = str(ctx.getChild(1))
@@ -125,7 +141,7 @@ class compiladoresListener(ParseTreeListener):
         # 1 contexto de argumentos
         # 1 contexto del bloque
         self.tablaSimbolos.removeContex()
-        print("CTX-RETORNO -> " +self.tablaSimbolos.ts.__str__())
+        #print("CTX-RETORNO -> " +self.tablaSimbolos.ts.__str__())
 
 
     # Exit a parse tree produced by compiladoresParser#parametros.
@@ -146,7 +162,6 @@ class compiladoresListener(ParseTreeListener):
     # Exit a parse tree produced by compiladoresParser#llamadaFuncion.
     def exitLlamadaFuncion(self, ctx:compiladoresParser.LlamadaFuncionContext):
         key = str(ctx.getChild(0))
-        #print(f'TS -> {self.tablaSimbolos.ts}')
         if not self.tablaSimbolos.findByKey(key):
             print(f'ERROR: La funcion "{key}" no existe')
 
