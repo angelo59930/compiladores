@@ -105,10 +105,11 @@ class MyVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#bloqueif.
     def visitBloqueif(self, ctx:compiladoresParser.BloqueifContext):
+        
         self.cont = self.cont + 1
         
         self.f.write("ifnot " + ctx.getChild(2).getText() + " jump else" + str(self.cont) + "\n")
-        self.visitChildren(ctx.getChild(4))
+        
         self.f.write("jump endif" + str(self.lastLabel[-1]) + "\n")
         self.f.write("label else" + str(self.lastLabel[-1]) + "\n")
 

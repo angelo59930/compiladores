@@ -1,26 +1,30 @@
-int suma(int a, int b);
-int main(int arg, int argv)
+int sumar(int a, int b)
 {
-
-  int a = 0 + 5, b = 1,dado, j;
-  
-  while(dado > 2){
-    float b = 1;
-    j++;
-    j--;
-  }
-
-  for(int i = 0; i < 10; i++){}
-
-  if(1 > 20){}
-
-  if (a > b){  
-    a = suma(a,b);
-  }
-
-  return 0;
+  int r = a + b;
+  return r;
 }
 
-int suma(int a, int b){
-  return a + b;
+int main()
+{
+  int y;
+  int x = 5;
+  int p, q, r, t;
+  int as = 1, bs = 2, c = 3;
+  int l, m = 1, n = 0, o;
+
+  y = sumar(x, 10);
+
+  {
+    int a = 5;
+    int b = a + x;
+  }
+
+  if (y == 14)
+  {
+    x = 2 * x;
+  }
+  else{
+    y = -2;
+  }
+  return 0;
 }

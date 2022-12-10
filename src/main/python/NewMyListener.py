@@ -128,6 +128,13 @@ class compiladoresListener(ParseTreeListener):
         tmp = ctx.getText()
         tmp = tmp.split(',')
         
+        try:
+            if tmp[0].isdigit() or float(tmp[0]):
+                return
+        except:
+            pass
+        
+        
         if self.tablaSimbolos.findByKey(str(tmp[0])):
             self.tablaSimbolos.returnKey(str(tmp[0])).used = True   
               
