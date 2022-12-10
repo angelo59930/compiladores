@@ -27,9 +27,25 @@ t1=t1+t0
 a= t1
 goto LOOP-2 
 CONTPROG-2: 
-pop return-2
-push return-2
-goto return-2
+if as<as goto IF-0 
+goto ELSE-0
+IF-0:
+a=0
+t0=a
+t1=a
+t1=t1+t0
+a= t1
+goto ENDIF-0
+ELSE-0:
+a=0
+t0=a
+t1=a
+t1=t1+t0
+a= t1
+ENDIF-0:
+pop return-3
+push return-3
+goto return-3
 SUMA:
 pop a
 pop b
@@ -38,6 +54,6 @@ t0=b
 t1=a
 t1=t1+t0
 sumando= t1
-pop return-1
-push return-1
-goto return-1
+pop return-2
+push return-2
+goto return-2

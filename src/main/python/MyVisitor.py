@@ -151,24 +151,36 @@ class MyVisitor(ParseTreeVisitor):
         self.currentLoop.pop()
         
 
-    #TODO::REVISAR
     def visitBloqueif(self, ctx:compiladoresParser.BloqueifContext):
         
-        self.cont = self.cont + 1
+        self.cont = self.cont + 1 
+        self.currentLoop.append(self.cont)
         
-        self.f.write("ifnot " + ctx.getChild(2).getText() + " goto ELSE-" + str(self.cont) + "\n")
+        # Hacemos la comparacion
+        self.f.write(f'if {ctx.getChild(1).getChild(1).getText()} goto IF-{self.lastLabel[-1]} \n')
+        # Saltamos al bloque else si la comparacion NO fue exitosa
+        if ctx.getChild(3):
+            self.f.write(f'goto ELSE-{self.lastLabel[-1]}\n')
+        else:
+            self.f.write(f'goto ENDIF-{self.lastLabel[-1]}\n')
+            
         
-        self.f.write(f"goto ENDIF {str(self.lastLabel[-1])}\n")
-        self.f.write(f"ELSE-{str(self.lastLabel[-1])}:\n")
+        # Desarrollo del bloque if si la comparacion fue exitosa
+        self.f.write(f'IF-{self.lastLabel[-1]}:\n')
+        self.visitChildren(ctx.getChild(2))
+        
+        # En el caso que haya un else nos lo saltamos
+        self.f.write(f'goto ENDIF-{self.lastLabel[-1]}\n')
+        
+        if ctx.getChild(3):
+            self.f.write(f'ELSE-{self.lastLabel[-1]}:\n')
+            self.visitChildren(ctx.getChild(3))    
+        
+        self.f.write(f'ENDIF-{self.lastLabel[-1]}:\n')
+        self.currentLoop.pop()
+        
 
-        if(ctx.getChild(5)):
-            self.visitChildren(ctx.getChild(5))
 
-        self.f.write("ENDIF-" + str(self.lastLabel[-1]) + ":\n")
-        self.lastLabel.pop()
-
-
-    #TODO::REVISAR
     def visitBloqueElse(self, ctx:compiladoresParser.BloqueElseContext):
         self.visitChildren(ctx)
         self.f.write("ENDIF-" + str(self.lastLabel[-1]) + ":\n")

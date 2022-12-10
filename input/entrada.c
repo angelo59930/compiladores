@@ -19,8 +19,16 @@ int main()
     int a = 0;
     a = a + a;
   }
-  
-  
+
+  if (as < as)
+  {
+    int a = 0;
+    a = a + a;
+  }
+  else{
+    int a = 0;
+    a = a + a;
+  }
 
   return 0;
 }
