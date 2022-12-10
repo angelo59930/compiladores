@@ -1,19 +1,28 @@
 push EOF
-jump main 
-pop arg
-pop argv
-t0=5
-t1=0
+goto MAIN 
+MAIN:
+x=5
+as=1
+bs=2
+c=3
+m=1
+n=0
+push PC
+push x
+push 10
+goto SUMA
+pop y
+pop return-1
+push return
+goto return-1
+SUMA:
+pop a
+pop b
+sumando=0
+t0=b
+t1=a
 t1=t1+t0
-a=t1
-b=t0
-b=t0
-i=0
-label loop1
-;
-ifnot ; jump loop1
-ifnot {} jump else2
-jump endif0
-label else0
-label endif0
-ifnot {a=suma(a,b);} jump else3
+sumando= t1
+pop return-1
+push return
+goto return-1

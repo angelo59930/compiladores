@@ -7,8 +7,9 @@ if __name__ is not None and "." in __name__:
 else:
     from compiladoresParser import compiladoresParser
 
-# This class defines a complete generic visitor for a parse tree produced by compiladoresParser.
-
+#TODO:FALTA EL BUCLE WHILE
+#TODO:FALTAN CORREGIR LOS IF, IF ELSE, ESLE
+#TODO:VER EL TEMA DE LOS RETORNOS
 class MyVisitor(ParseTreeVisitor):
     cont = 0
     functions = dict()
@@ -21,47 +22,29 @@ class MyVisitor(ParseTreeVisitor):
     def visitPrograma(self, ctx:compiladoresParser.ProgramaContext):
         self.f = open("./output/CodigoIntermedio.txt", "w")
         self.f.write("push EOF\n")
-        self.f.write("jump main \n")
+        self.f.write("goto MAIN \n")
         
         self.visitChildren(ctx)
         self.f.close()
 
 
-    # Visit a parse tree produced by compiladoresParser#instrucciones.
-    def visitInstrucciones(self, ctx:compiladoresParser.InstruccionesContext):
-        return self.visitChildren(ctx)
 
+    def visitCabezera(self, ctx:compiladoresParser.CabezeraContext):
+        tmp = str(ctx.getChild(1).getText()).upper()
+        self.f.write(f'{tmp}:\n')
+        self.cont = self.cont + 1
+        self.visitChildren(ctx.getChild(3))
+    
 
-    # Visit a parse tree produced by compiladoresParser#instruccion.
-    def visitInstruccion(self, ctx:compiladoresParser.InstruccionContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by compiladoresParser#bloque.
-    def visitBloque(self, ctx:compiladoresParser.BloqueContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by compiladoresParser#retorno.
+    # TODO:REVISAR
     def visitRetorno(self, ctx:compiladoresParser.RetornoContext):
-        self.f.write("pop return" + str(self.cont)  + "\n")
+        self.f.write("pop return-" + str(self.cont)  + "\n")
         self.f.write("push " + ctx.getChild(0).getText() + "\n")
         
-        self.f.write("jump return" + str(self.cont) + "\n")
+        self.f.write("goto return-" + str(self.cont) + "\n")
         self.cont = self.cont - 1
 
 
-    # Visit a parse tree produced by compiladoresParser#prototipado.
-    def visitPrototipado(self, ctx:compiladoresParser.PrototipadoContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by compiladoresParser#argumentos.
-    def visitArgumentos(self, ctx:compiladoresParser.ArgumentosContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by compiladoresParser#argumento.
     def visitArgumento(self, ctx:compiladoresParser.ArgumentoContext):
         self.f.write("pop " + str(ctx.getChild(1)) + "\n")
         return self.visitChildren(ctx)
@@ -72,7 +55,6 @@ class MyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by compiladoresParser#parametros.
     def visitParametros(self, ctx:compiladoresParser.ParametrosContext):
         self.f.write("push " + str(ctx.getChild(0))+ "\n")
         return self.visitChildren(ctx)
@@ -80,21 +62,62 @@ class MyVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#llamadaFuncion.
     def visitLlamadaFuncion(self, ctx:compiladoresParser.LlamadaFuncionContext):
+        print(ctx.getText())
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by compiladoresParser#bloquefor.
+    #TODO:REVISAR
     def visitBloquefor(self, ctx:compiladoresParser.BloqueforContext):
         self.cont = self.cont + 1
         self.currentLoop.append(self.cont)
+        
+        #   t1 := 0                     ; inicializa i
+        #   L1:                         ; etiquieta
+        #   if t1 >= 10 goto L2         ; salto condicional
+        #   ...                         ; codigo
+        #   goto L1                     ; salto al loop
+        #   L2:                         ; continuacion del programa
+        #   ...
+        
+        # Escribimos la declaracion del iterador
+        self.tmp = self.tmp + 1
+        self.f.write("t" + str(self.tmp) + "=" + ctx.getChild(2).getChild(1).getText().split('=')[1] + "\n")
+        
+        # Escribimos la label que corresponde
+        self.f.write("LOOP-" + str(self.currentLoop[-1]) + ":\n")
+        
+        # Escribimos la comprobacion para el salto condicional
+        self.f.write(f'if {ctx.getChild(4).getText()} ')
+        # Realizamos el salto si hace falta
+        self.f.write(f'goto CONTPROG-{self.currentLoop[-1]} \n')
+        
+        # CODIGO INTERMEDIO PARA EL INTERIOR DEL LOOP
+        # visitamos el hijo donde estan las instrucciones -> el hijo 8
+        self.visitChildren(ctx.getChild(8))
+        
+        
+        # CODIGO INTERMEDIO PARA EL INCREMENTO O DECREMENTO DEL ITERADOR 
+        # visitar el hijo donde este el incremento/decremento -> 6
 
-        self.f.write(ctx.getChild(2).getChild(1).getText() + "\n")
-        self.f.write("label loop" + str(self.currentLoop[-1]) + "\n")
-        self.visitChildren(ctx.getChild(7))
+        iterador = ctx.getChild(6).getChild(0)
+        operacion = str(ctx.getChild(6).getChild(1))
+        if '=' in operacion:
+            self.visitChildren(ctx.getChild(6))
+        elif '-' in operacion:
+            self.f.write("i=i-1\n")            
+        elif '+' in operacion:
+            self.f.write("i=i+1\n")            
 
-        self.f.write(ctx.getChild(5).getText() + "\n")
-        self.f.write("ifnot " + ctx.getChild(3).getText() + " jump loop" + str(self.currentLoop[-1]) + "\n")
+        # Salto al loop
+        self.f.write(f'goto LOOP{self.currentLoop[-1]} \n')
+        
+        
+        self.f.write(f'CONTPROG-{self.currentLoop[-1]}: \n')        
+        
         self.currentLoop.pop()
+        
+        #self.visitChildren(ctx.getChild(2)) ; llamada al codigo que hay en el medio
+        #
         
 
 
@@ -102,28 +125,27 @@ class MyVisitor(ParseTreeVisitor):
     def visitBloquewhile(self, ctx:compiladoresParser.BloquewhileContext):
         return self.visitChildren(ctx)
 
-
-    # Visit a parse tree produced by compiladoresParser#bloqueif.
+    #TODO::REVISAR
     def visitBloqueif(self, ctx:compiladoresParser.BloqueifContext):
         
         self.cont = self.cont + 1
         
-        self.f.write("ifnot " + ctx.getChild(2).getText() + " jump else" + str(self.cont) + "\n")
+        self.f.write("ifnot " + ctx.getChild(2).getText() + " goto ELSE-" + str(self.cont) + "\n")
         
-        self.f.write("jump endif" + str(self.lastLabel[-1]) + "\n")
-        self.f.write("label else" + str(self.lastLabel[-1]) + "\n")
+        self.f.write("goto ENDIF" + str(self.lastLabel[-1]) + "\n")
+        self.f.write("ELSE-" + str(self.lastLabel[-1]) + ":\n")
 
         if(ctx.getChild(5)):
             self.visitChildren(ctx.getChild(5))
 
-        self.f.write("label endif" + str(self.lastLabel[-1]) + "\n")
+        self.f.write("ENDIF-" + str(self.lastLabel[-1]) + ":\n")
         self.lastLabel.pop()
 
 
-    # Visit a parse tree produced by compiladoresParser#bloqueElse.
+    #TODO::REVISAR
     def visitBloqueElse(self, ctx:compiladoresParser.BloqueElseContext):
         self.visitChildren(ctx)
-        self.f.write("label endif" + str(self.lastLabel[-1]) + "\n")
+        self.f.write("ENDIF-" + str(self.lastLabel[-1]) + ":\n")
 
 
     # Visit a parse tree produced by compiladoresParser#declaracion.
@@ -136,29 +158,26 @@ class MyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by compiladoresParser#init.
     def visitInit(self, ctx:compiladoresParser.InitContext):
         self.visitChildren(ctx)
-        self.f.write(ctx.getChild(0).getText() + ctx.getChild(1).getText() + "t" + str(self.tmp) +  "\n")
+        self.f.write(ctx.getText() + "\n")
         self.rollback = False
-        self.tmp = 0
 
 
-    # Visit a parse tree produced by compiladoresParser#asignacion.
+        #TODO::REVISAR AHORA
     def visitAsignacion(self, ctx:compiladoresParser.AsignacionContext):
         self.visitChildren(ctx)
         self.f.write(str(ctx.getChild(0)) + "= t" + str(self.tmp) + "\n")
         self.tmp = 0
 
 
-    # Visit a parse tree produced by compiladoresParser#asignarFuncion.
     def visitAsignarFuncion(self, ctx:compiladoresParser.AsignarFuncionContext):
         self.f.write("push PC\n")
         self.visitChildren(ctx)
         if(self.lastLabel):
             self.lastLabel.pop()
         
-        self.f.write("jump " + str(ctx.getChild(2).getChild(0))+ "\n")
+        self.f.write("goto " + str(ctx.getChild(2).getChild(0)).upper() + "\n")
         self.f.write("pop " + str(ctx.getChild(0))+ "\n")
 
 
@@ -177,7 +196,7 @@ class MyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by compiladoresParser#exp.
+   #TODO::REVISAR
     def visitExp(self, ctx:compiladoresParser.ExpContext):
         self.visitChildren(ctx)
         if(ctx.getChildCount()):
@@ -192,17 +211,17 @@ class MyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by compiladoresParser#t.
     def visitT(self, ctx:compiladoresParser.TContext):
         self.visitChildren(ctx)
-        if(ctx.getChildCount() and not self.rollback):
+        
+        if ctx.getChildCount() and not self.rollback:
             self.f.write("t" + str(self.tmp) + "=" + ctx.getChild(1).getText() + "\n")
             self.tmp = self.tmp + 1
-        if(self.rollback):
-            if(ctx.getChildCount()):
-                self.f.write("t" + str(self.tmp + 1) + "=" + "t" + str(self.tmp + 1))
-                self.f.write(ctx.getChild(0).getText() + "t" + str(self.tmp) + "\n")
-                self.tmp = self.tmp + 1     
+            
+        elif self.rollback and ctx.getChildCount():
+            self.f.write("t" + str(self.tmp + 1) + "=" + "t" + str(self.tmp + 1))
+            self.f.write(ctx.getChild(0).getText() + "t" + str(self.tmp) + "\n")
+            self.tmp = self.tmp + 1     
 
 
     # Visit a parse tree produced by compiladoresParser#factor.
@@ -232,12 +251,12 @@ class MyVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by compiladoresParser#incrementoUnario.
     def visitIncrementoUnario(self, ctx:compiladoresParser.IncrementoUnarioContext):
-        return self.visitChildren(ctx)
+        return self.visitChildren(ctx)     
 
 
     # Visit a parse tree produced by compiladoresParser#decrementoUnario.
     def visitDecrementoUnario(self, ctx:compiladoresParser.DecrementoUnarioContext):
-        return self.visitChildren(ctx)
+        return self.visitChildren(ctx)   
 
 
 

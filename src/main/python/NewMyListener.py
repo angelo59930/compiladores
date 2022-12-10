@@ -8,6 +8,7 @@ if __name__ is not None and "." in __name__:
 else:
     from compiladoresParser import compiladoresParser
 
+#TODO: REVISAR EL CREAR UNA FUNCION SIN PROTOTIPO AL PRINCIPIO DEL ARCHIVO
 class compiladoresListener(ParseTreeListener):
     contador = 0;
     tablaSimbolos = TablaSimbolos()
