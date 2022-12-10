@@ -9,7 +9,6 @@ else:
 
 #TODO:FALTA EL BUCLE WHILE
 #TODO:FALTAN CORREGIR LOS IF, IF ELSE, ESLE
-#TODO:VER EL TEMA DE LOS RETORNOS
 class MyVisitor(ParseTreeVisitor):
     cont = 0
     functions = dict()
@@ -32,15 +31,12 @@ class MyVisitor(ParseTreeVisitor):
     def visitCabezera(self, ctx:compiladoresParser.CabezeraContext):
         tmp = str(ctx.getChild(1).getText()).upper()
         self.f.write(f'{tmp}:\n')
-        self.cont = self.cont + 1
         self.visitChildren(ctx.getChild(3))
     
 
-    # TODO:REVISAR
     def visitRetorno(self, ctx:compiladoresParser.RetornoContext):
         self.f.write("pop return-" + str(self.cont)  + "\n")
-        self.f.write("push " + ctx.getChild(0).getText() + "\n")
-        
+        self.f.write(f"push {ctx.getChild(0).getText()}-{str(self.cont)}\n")
         self.f.write("goto return-" + str(self.cont) + "\n")
         self.cont = self.cont - 1
 
@@ -60,12 +56,6 @@ class MyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by compiladoresParser#llamadaFuncion.
-    def visitLlamadaFuncion(self, ctx:compiladoresParser.LlamadaFuncionContext):
-        print(ctx.getText())
-        return self.visitChildren(ctx)
-
-
     #TODO:REVISAR
     def visitBloquefor(self, ctx:compiladoresParser.BloqueforContext):
         self.cont = self.cont + 1
@@ -80,14 +70,15 @@ class MyVisitor(ParseTreeVisitor):
         #   ...
         
         # Escribimos la declaracion del iterador
-        self.tmp = self.tmp + 1
         self.f.write("t" + str(self.tmp) + "=" + ctx.getChild(2).getChild(1).getText().split('=')[1] + "\n")
+        self.tmp = self.tmp + 1
         
         # Escribimos la label que corresponde
         self.f.write("LOOP-" + str(self.currentLoop[-1]) + ":\n")
         
         # Escribimos la comprobacion para el salto condicional
-        self.f.write(f'if {ctx.getChild(4).getText()} ')
+        self.f.write(f'if t{self.tmp - 1}{ctx.getChild(4).getChild(1)}{ctx.getChild(4).getChild(2)} ')
+        
         # Realizamos el salto si hace falta
         self.f.write(f'goto CONTPROG-{self.currentLoop[-1]} \n')
         
@@ -101,25 +92,23 @@ class MyVisitor(ParseTreeVisitor):
 
         iterador = ctx.getChild(6).getChild(0)
         operacion = str(ctx.getChild(6).getChild(1))
+        
         if '=' in operacion:
             self.visitChildren(ctx.getChild(6))
         elif '-' in operacion:
-            self.f.write("i=i-1\n")            
+            self.f.write(f"t{self.tmp}=t{self.tmp}-1\n")            
         elif '+' in operacion:
-            self.f.write("i=i+1\n")            
+            self.f.write(f"t{self.tmp}=t{self.tmp}+1\n")            
 
         # Salto al loop
-        self.f.write(f'goto LOOP{self.currentLoop[-1]} \n')
+        self.f.write(f'goto LOOP-{self.currentLoop[-1]} \n')
         
         
         self.f.write(f'CONTPROG-{self.currentLoop[-1]}: \n')        
         
         self.currentLoop.pop()
         
-        #self.visitChildren(ctx.getChild(2)) ; llamada al codigo que hay en el medio
-        #
         
-
 
     # Visit a parse tree produced by compiladoresParser#bloquewhile.
     def visitBloquewhile(self, ctx:compiladoresParser.BloquewhileContext):
@@ -132,8 +121,8 @@ class MyVisitor(ParseTreeVisitor):
         
         self.f.write("ifnot " + ctx.getChild(2).getText() + " goto ELSE-" + str(self.cont) + "\n")
         
-        self.f.write("goto ENDIF" + str(self.lastLabel[-1]) + "\n")
-        self.f.write("ELSE-" + str(self.lastLabel[-1]) + ":\n")
+        self.f.write(f"goto ENDIF {str(self.lastLabel[-1])}\n")
+        self.f.write(f"ELSE-{str(self.lastLabel[-1])}:\n")
 
         if(ctx.getChild(5)):
             self.visitChildren(ctx.getChild(5))
@@ -164,7 +153,6 @@ class MyVisitor(ParseTreeVisitor):
         self.rollback = False
 
 
-        #TODO::REVISAR AHORA
     def visitAsignacion(self, ctx:compiladoresParser.AsignacionContext):
         self.visitChildren(ctx)
         self.f.write(str(ctx.getChild(0)) + "= t" + str(self.tmp) + "\n")
@@ -196,7 +184,6 @@ class MyVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-   #TODO::REVISAR
     def visitExp(self, ctx:compiladoresParser.ExpContext):
         self.visitChildren(ctx)
         if(ctx.getChildCount()):

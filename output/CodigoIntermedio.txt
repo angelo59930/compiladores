@@ -7,13 +7,19 @@ bs=2
 c=3
 m=1
 n=0
-push PC
-push x
-push 10
-goto SUMA
-pop y
+t0=4
+LOOP-1:
+if t0<5 goto CONTPROG-1 
+a=0
+t1=a
+t2=i
+t1=t1+t0
+a= t1
+t0=t0+1
+goto LOOP-1 
+CONTPROG-1: 
 pop return-1
-push return
+push return-1
 goto return-1
 SUMA:
 pop a
@@ -23,6 +29,6 @@ t0=b
 t1=a
 t1=t1+t0
 sumando= t1
-pop return-1
-push return
-goto return-1
+pop return-0
+push return-0
+goto return-0

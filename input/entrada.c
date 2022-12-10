@@ -8,7 +8,12 @@ int main()
   int as = 1, bs = 2, c = 3;
   int l, m = 1, n = 0, o;
 
-  y = suma(x, 10);
+  for (int i =4; i < 5; i++)
+  {
+    int a = 0;
+    a = i + a;
+  }
+  
 
   return 0;
 }
