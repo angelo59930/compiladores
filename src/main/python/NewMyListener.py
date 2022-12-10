@@ -82,7 +82,7 @@ class compiladoresListener(ParseTreeListener):
             self.tablaSimbolos.returnKey(name).initialized = True
             
         else:
-            print(f'ERROR: La funcion "{name}" no se encuentra prototipada')
+            print(f'WARNING: La funcion "{name}" no se encuentra prototipada')
 
 
     # Exit a parse tree produced by compiladoresParser#argumento.
