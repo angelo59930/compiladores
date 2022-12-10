@@ -7,7 +7,7 @@ if __name__ is not None and "." in __name__:
 else:
     from compiladoresParser import compiladoresParser
 
-#TODO:FALTA EL BUCLE WHILE
+
 #TODO:FALTAN CORREGIR LOS IF, IF ELSE, ESLE
 class MyVisitor(ParseTreeVisitor):
     cont = 0
@@ -55,8 +55,6 @@ class MyVisitor(ParseTreeVisitor):
         self.f.write("push " + str(ctx.getChild(0))+ "\n")
         return self.visitChildren(ctx)
 
-
-    #TODO:REVISAR
     def visitBloquefor(self, ctx:compiladoresParser.BloqueforContext):
         self.cont = self.cont + 1
         self.currentLoop.append(self.cont)
@@ -105,14 +103,53 @@ class MyVisitor(ParseTreeVisitor):
         
         
         self.f.write(f'CONTPROG-{self.currentLoop[-1]}: \n')        
-        
         self.currentLoop.pop()
         
         
 
     # Visit a parse tree produced by compiladoresParser#bloquewhile.
     def visitBloquewhile(self, ctx:compiladoresParser.BloquewhileContext):
-        return self.visitChildren(ctx)
+        
+
+        # while(x<10 && y>=0){
+        # x=x+1;
+        # y=y-1;
+        # }
+        # 
+        # Su código de 3 direcciones equivalente va como sigue:
+        # 
+        # L1: //etiqueta de salto de retorno
+        # if(x<10) goto L2;
+        # goto L3;
+        # L2:if(y>=0)goto L4;
+        # goto L3;
+        # L4: //si es verdadera la condicion
+        # x=x+1;
+        # y=y-1;
+        # goto L1; //salto para volver a evaluar la condicion
+        # L3
+        self.cont = self.cont + 1
+        self.currentLoop.append(self.cont)
+
+        # Etiqueta de retorno al bucle
+        self.f.write(f'LOOP-{self.currentLoop[-1]}:\n')
+        
+        # Escribimos la comprobacion para el salto condicional
+        self.f.write(f'if {ctx.getChild(1).getChild(1).getText()} ')
+        
+        # Realizamos el salto si hace falta
+        self.f.write(f'goto CONTPROG-{self.currentLoop[-1]} \n')
+        
+        # CODIGO INTERMEDIO PARA EL INTERIOR DEL LOOP
+        # visitamos el hijo donde estan las instrucciones -> el hijo 2
+        self.visitChildren(ctx.getChild(2))
+        
+        
+        # Salto al loop
+        self.f.write(f'goto LOOP-{self.currentLoop[-1]} \n')
+        self.f.write(f'CONTPROG-{self.currentLoop[-1]}: \n')        
+        self.currentLoop.pop()
+        
 
     #TODO::REVISAR
     def visitBloqueif(self, ctx:compiladoresParser.BloqueifContext):

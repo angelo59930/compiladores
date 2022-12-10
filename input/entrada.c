@@ -13,6 +13,13 @@ int main()
     int a = 0;
     a = i + a;
   }
+
+  while (m<5)
+  {
+    int a = 0;
+    a = a + a;
+  }
+  
   
 
   return 0;
