@@ -1,0 +1,59 @@
+push EOF
+goto MAIN 
+SUMA:
+pop a
+pop b
+sumando=0
+t0=b
+t1=a
+t1=t1+t0
+sumando= t1
+pop return-0
+push return-0
+goto return-0
+MAIN:
+x=5
+as=1
+bs=2
+c=3
+m=1
+n=0
+t0=4
+LOOP-0:
+if t0<5 goto CONTPROG-0 
+a=0
+t1=a
+t2=i
+t1=t1+t0
+a= t1
+t0=t0+1
+goto LOOP-0 
+CONTPROG-0: 
+LOOP-1:
+if m<5 goto CONTPROG-1 
+a=0
+t0=a
+t1=a
+t1=t1+t0
+a= t1
+goto LOOP-1 
+CONTPROG-1: 
+if as<as goto IF-0 
+goto ELSE-0
+IF-0:
+a=0
+t0=a
+t1=a
+t1=t1+t0
+a= t1
+goto ENDIF-0
+ELSE-0:
+a=0
+t0=a
+t1=a
+t1=t1+t0
+a= t1
+ENDIF-0:
+pop return-2
+push return-2
+goto return-2

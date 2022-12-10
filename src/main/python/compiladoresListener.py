@@ -62,6 +62,15 @@ class compiladoresListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by compiladoresParser#argumentosProto.
+    def enterArgumentosProto(self, ctx:compiladoresParser.ArgumentosProtoContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#argumentosProto.
+    def exitArgumentosProto(self, ctx:compiladoresParser.ArgumentosProtoContext):
+        pass
+
+
     # Enter a parse tree produced by compiladoresParser#argumentos.
     def enterArgumentos(self, ctx:compiladoresParser.ArgumentosContext):
         pass
@@ -80,12 +89,30 @@ class compiladoresListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by compiladoresParser#argumentoProto.
+    def enterArgumentoProto(self, ctx:compiladoresParser.ArgumentoProtoContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#argumentoProto.
+    def exitArgumentoProto(self, ctx:compiladoresParser.ArgumentoProtoContext):
+        pass
+
+
     # Enter a parse tree produced by compiladoresParser#funcion.
     def enterFuncion(self, ctx:compiladoresParser.FuncionContext):
         pass
 
     # Exit a parse tree produced by compiladoresParser#funcion.
     def exitFuncion(self, ctx:compiladoresParser.FuncionContext):
+        pass
+
+
+    # Enter a parse tree produced by compiladoresParser#cabezera.
+    def enterCabezera(self, ctx:compiladoresParser.CabezeraContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#cabezera.
+    def exitCabezera(self, ctx:compiladoresParser.CabezeraContext):
         pass
 
 
@@ -134,6 +161,15 @@ class compiladoresListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by compiladoresParser#bloqueElse.
+    def enterBloqueElse(self, ctx:compiladoresParser.BloqueElseContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#bloqueElse.
+    def exitBloqueElse(self, ctx:compiladoresParser.BloqueElseContext):
+        pass
+
+
     # Enter a parse tree produced by compiladoresParser#declaracion.
     def enterDeclaracion(self, ctx:compiladoresParser.DeclaracionContext):
         pass
@@ -167,6 +203,15 @@ class compiladoresListener(ParseTreeListener):
 
     # Exit a parse tree produced by compiladoresParser#asignacion.
     def exitAsignacion(self, ctx:compiladoresParser.AsignacionContext):
+        pass
+
+
+    # Enter a parse tree produced by compiladoresParser#asignarFuncion.
+    def enterAsignarFuncion(self, ctx:compiladoresParser.AsignarFuncionContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#asignarFuncion.
+    def exitAsignarFuncion(self, ctx:compiladoresParser.AsignarFuncionContext):
         pass
 
 
@@ -251,12 +296,39 @@ class compiladoresListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by compiladoresParser#cmps.
+    def enterCmps(self, ctx:compiladoresParser.CmpsContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#cmps.
+    def exitCmps(self, ctx:compiladoresParser.CmpsContext):
+        pass
+
+
     # Enter a parse tree produced by compiladoresParser#cmp.
     def enterCmp(self, ctx:compiladoresParser.CmpContext):
         pass
 
     # Exit a parse tree produced by compiladoresParser#cmp.
     def exitCmp(self, ctx:compiladoresParser.CmpContext):
+        pass
+
+
+    # Enter a parse tree produced by compiladoresParser#incrementoUnario.
+    def enterIncrementoUnario(self, ctx:compiladoresParser.IncrementoUnarioContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#incrementoUnario.
+    def exitIncrementoUnario(self, ctx:compiladoresParser.IncrementoUnarioContext):
+        pass
+
+
+    # Enter a parse tree produced by compiladoresParser#decrementoUnario.
+    def enterDecrementoUnario(self, ctx:compiladoresParser.DecrementoUnarioContext):
+        pass
+
+    # Exit a parse tree produced by compiladoresParser#decrementoUnario.
+    def exitDecrementoUnario(self, ctx:compiladoresParser.DecrementoUnarioContext):
         pass
 
 

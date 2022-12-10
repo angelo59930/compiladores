@@ -14,19 +14,31 @@ SUMA: '+';
 MULT: '*';
 REST: '-';
 DIV: '/';
+PUNTO: '.';
+INCREMENTO: '++';
+DECREMENTO: '--';
 
 MENOR: '<';
 MAYOR: '>';
 IGUALDAD: '==';
 DISTINTO: '!=';
+AND: '&&';
+OR: '||';
 
 INT: 'int';
+FLOAT: 'float';
 
 IF: 'if';
+ELSE: 'else';
 WHILE: 'while';
 FOR: 'for';
 
-NUMERO: DIGITO+;
+// NUMERO = 6.+981298+1+6
+NUMERO:
+	DIGITO+
+	| '-' DIGITO+
+	| DIGITO+ PUNTO DIGITO+
+	| '-' DIGITO+ PUNTO DIGITO+;
 
 RETORNO: 'return';
 
@@ -42,26 +54,38 @@ instruccion:
 	bloque
 	| declaracion PYC
 	| asignacion PYC
+	| incrementoUnario PYC
+	| decrementoUnario PYC
 	| bloqueif
 	| bloquewhile
 	| bloquefor
 	| prototipado PYC
 	| funcion
-	| llamadaFuncion PYC;
+	| llamadaFuncion PYC
+	| asignarFuncion PYC;
 
 bloque:
 	LLA instrucciones LLC
 	| LLA instrucciones retorno PYC LLC;
 
-retorno: RETORNO | RETORNO ID | RETORNO NUMERO;
+retorno: RETORNO | RETORNO ID | RETORNO NUMERO | RETORNO oparit;
 
-prototipado: tdato ID PA (argumentos |) PC;
+prototipado: tdato ID PA (argumentosProto |) PC;
+
+argumentosProto:
+	argumentoProto
+	| argumentoProto COMA argumentosProto
+	|;
 
 argumentos: argumento | argumento COMA argumentos |;
 
 argumento: tdato ID;
 
-funcion: prototipado bloque;
+argumentoProto: tdato ID;
+
+funcion: cabezera bloque;
+
+cabezera: tdato ID PA (argumentos |) PC;
 
 parametros:
 	ID
@@ -73,17 +97,35 @@ parametros:
 llamadaFuncion: ID PA (parametros |) PC | ID PA PC;
 
 bloquefor:
-	FOR PA (declaracion | asignacion) PYC cmp PYC asignacion PC bloque
+	FOR PA (declaracion | asignacion) PYC cmp PYC (
+		asignacion
+		| incrementoUnario
+		| decrementoUnario
+	) PC bloque
 	| FOR PA PYC PYC PYC PC
-	| FOR PA (declaracion | asignacion) PYC PYC asignacion PC bloque
+	| FOR PA (declaracion | asignacion) PYC PYC (
+		asignacion
+		| incrementoUnario
+		| decrementoUnario
+	) PC bloque
 	| FOR PA (declaracion | asignacion) PYC cmp PYC PC bloque
 	| FOR PA (declaracion | asignacion) PYC PYC PC bloque
-	| FOR PA PYC cmp PYC asignacion PC bloque
-	| FOR PA PYC PYC asignacion PC bloque;
+	| FOR PA PYC cmp PYC (
+		asignacion
+		| incrementoUnario
+		| decrementoUnario
+	) PC bloque
+	| FOR PA PYC PYC (
+		asignacion
+		| incrementoUnario
+		| decrementoUnario
+	) PC bloque;
 
 bloquewhile: WHILE control bloque;
 
-bloqueif: IF control bloque;
+bloqueif: IF control bloque | IF control bloque bloqueElse;
+
+bloqueElse: ELSE bloque;
 
 declaracion:
 	tdato ID
@@ -99,12 +141,11 @@ conDeclaracion:
 
 init: ID ASSIG NUMERO | ID ASSIG itop | ID ASSIG llamadaFuncion;
 
-asignacion:
-	ID ASSIG NUMERO
-	| ID ASSIG itop
-	| ID ASSIG llamadaFuncion;
+asignacion: ID ASSIG NUMERO | ID ASSIG itop;
 
-tdato: INT;
+asignarFuncion: ID ASSIG llamadaFuncion;
+
+tdato: INT | FLOAT;
 
 itop: oparit itop |;
 // c = a + b + d + f / r * q
@@ -120,7 +161,9 @@ factor: ID | NUMERO | PA exp PC;
 
 f: MULT factor f | DIV factor f |;
 
-control: PA cmp PC;
+control: PA cmps PC;
+
+cmps: cmp | cmp AND cmps | cmp OR cmps;
 
 cmp:
 	ID MAYOR NUMERO
@@ -134,4 +177,12 @@ cmp:
 	| NUMERO MAYOR ID
 	| NUMERO MENOR ID
 	| NUMERO IGUALDAD ID
-	| NUMERO DISTINTO ID;
+	| NUMERO DISTINTO ID
+	| NUMERO MAYOR NUMERO
+	| NUMERO MENOR NUMERO
+	| NUMERO IGUALDAD NUMERO
+	| NUMERO DISTINTO NUMERO;
+
+incrementoUnario: ID INCREMENTO;
+
+decrementoUnario: ID DECREMENTO;

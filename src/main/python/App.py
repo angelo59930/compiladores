@@ -2,7 +2,8 @@ import sys
 from antlr4 import *
 from compiladoresLexer  import compiladoresLexer
 from compiladoresParser import compiladoresParser
-from MiListener import MiListener
+from NewMyListener import compiladoresListener
+from MyVisitor import MyVisitor
 
 def main(argv):
     archivo = "input/entrada.c"
@@ -12,9 +13,11 @@ def main(argv):
     lexer = compiladoresLexer(input)
     stream = CommonTokenStream(lexer)
     parser = compiladoresParser(stream)
-    miListener = MiListener()
+    miListener = compiladoresListener()
+    miVisitor = MyVisitor()
     parser.addParseListener(miListener)
     tree = parser.programa()
+    miVisitor.visitPrograma(tree)
     #tree = parser.prog()
 
 if __name__ == '__main__':
